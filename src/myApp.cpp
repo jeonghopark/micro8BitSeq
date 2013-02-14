@@ -24,11 +24,12 @@ int pitchIndex;
 
 float pitchHigh;
 
-string fileName = "bell_sample_01.wav";
+string fileName = "A-HiHat2ClosedB.aif";
 
 int speed;
 
 float hightVolume;
+float pitchMapHigh;
 
 //--------------------------------------------------------------
 void myApp::setup(){
@@ -89,8 +90,9 @@ void myApp::setup(){
     piano8.setMultiPlay(true);
     
     pitchIndex = -1;
-    
     pitchHigh = 7.0;
+    
+    pitchMapHigh = ofGetHeight()/2;
     
     speed = 5;
     
@@ -102,24 +104,8 @@ void myApp::update(){
 
     mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
     
-    if (ofGetFrameNum()%speed==0) {
-        pitchIndex = pitchIndex + 1;
-    }
-    
-    if (pitchIndex>7) {
-        pitchIndex = 0;
-    }
-    
-    cout << pitchIndex << endl;
- 
-}
-
-//--------------------------------------------------------------
-void myApp::draw(){
-    
-    ofPushStyle();
     distMouseSize = tempoLineSize.distance(mousePosition);
-    if ((distMouseSize<8)&&(mouseButton==true)) {
+    if ((distMouseSize<15)&&(mouseButton==true)) {
         ofSetColor(255, 255);
         tempoLineSize = ofVec2f(mousePosition.x, ofGetHeight()/2);
         tempoLineOnOff = tempoLineSize-ofVec2f((-ofGetWidth()/2+mousePosition.x)*2, 0);
@@ -128,12 +114,30 @@ void myApp::draw(){
         tempoLineSize = tempoLineSize;
         tempoLineOnOff = tempoLineOnOff;
     }
+    tempoLength = tempoLineOnOff.distance(tempoLineSize);
+    
+    
+    speed = int(ofMap(tempoLength, 0, ofGetWidth(), 2, 10));
+    cout << speed << endl;
+    
+    if (ofGetFrameNum()%speed*2==0) {
+        pitchIndex = pitchIndex + 1;
+    }
+    if (pitchIndex>7) {
+        pitchIndex = 0;
+    }
+     
+}
+
+//--------------------------------------------------------------
+void myApp::draw(){
+    
+    ofPushStyle();
     ofRect(tempoLineOnOff, 10, 10);
     ofCircle(tempoLineSize, 6);
     ofLine(tempoLineOnOff, tempoLineSize);
     ofPopStyle();
 
-    tempoLength = tempoLineOnOff.distance(tempoLineSize);
 
     ofPushMatrix();
     float postionPitchLine1 = (tempoLineOnOff.x+tempoLength*1/10+tempoLength*1/20);
@@ -143,11 +147,11 @@ void myApp::draw(){
     firstLine->mousePosition = mousePosition;
     firstLine->drawing();
 
-    if (pitchIndex==0) {
-        firstLine->trigger = true;
-    } else {
-        firstLine->trigger = false;
-    }
+//    if (pitchIndex==0) {
+//        firstLine->trigger = true;
+//    } else {
+//        firstLine->trigger = false;
+//    }
 
     if (firstLine->signalOnOff) {
         piano1.setVolume(0.0);
@@ -156,8 +160,11 @@ void myApp::draw(){
     }
         
     if (ofGetFrameNum()%(speed*8)==(speed*0)) {
+        firstLine->trigger = true;
         piano1.play();
-        piano1.setSpeed(ofMap(firstLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano1.setSpeed(ofMap(firstLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0) * ofRandom(0.95,1.05));
+    } else {
+        firstLine->trigger = false;
     }
     
     ofPopMatrix();
@@ -169,11 +176,11 @@ void myApp::draw(){
     secondLine->mouseButton = mouseButton;
     secondLine->mousePosition = mousePosition;
     secondLine->drawing();
-    if (pitchIndex==1) {
-        secondLine->trigger = true;
-    } else {
-        secondLine->trigger = false;
-    }
+//    if (pitchIndex==1) {
+//        secondLine->trigger = true;
+//    } else {
+//        secondLine->trigger = false;
+//    }
 
     if (secondLine->signalOnOff) {
         piano2.setVolume(0.0);
@@ -182,8 +189,11 @@ void myApp::draw(){
     }
     
     if (ofGetFrameNum()%(speed*8)==(speed*1)) {
+        secondLine->trigger = true;
         piano2.play();
-        piano2.setSpeed(ofMap(secondLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano2.setSpeed(ofMap(secondLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        secondLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -194,11 +204,11 @@ void myApp::draw(){
     thirdLine->mouseButton = mouseButton;
     thirdLine->mousePosition = mousePosition;
     thirdLine->drawing();
-    if (pitchIndex==2) {
-        thirdLine->trigger = true;
-    } else {
-        thirdLine->trigger = false;
-    }
+//    if (pitchIndex==2) {
+//        thirdLine->trigger = true;
+//    } else {
+//        thirdLine->trigger = false;
+//    }
 
     if (thirdLine->signalOnOff) {
         piano3.setVolume(0.0);
@@ -207,8 +217,11 @@ void myApp::draw(){
     }
     
     if (ofGetFrameNum()%(speed*8)==(speed*2)) {
+        thirdLine->trigger = true;
         piano3.play();
-        piano3.setSpeed(ofMap(thirdLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano3.setSpeed(ofMap(thirdLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        thirdLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -219,11 +232,11 @@ void myApp::draw(){
     forthLine->mouseButton = mouseButton;
     forthLine->mousePosition = mousePosition;
     forthLine->drawing();
-    if (pitchIndex==3) {
-        forthLine->trigger = true;
-    } else {
-        forthLine->trigger = false;
-    }
+//    if (pitchIndex==3) {
+//        forthLine->trigger = true;
+//    } else {
+//        forthLine->trigger = false;
+//    }
 
     if (forthLine->signalOnOff) {
         piano4.setVolume(0.0);
@@ -232,8 +245,11 @@ void myApp::draw(){
     }
     
     if (ofGetFrameNum()%(speed*8)==(speed*3)) {
+        forthLine->trigger = true;
         piano4.play();
-        piano4.setSpeed(ofMap(forthLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano4.setSpeed(ofMap(forthLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        forthLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -244,11 +260,11 @@ void myApp::draw(){
     fifthLine->mouseButton = mouseButton;
     fifthLine->mousePosition = mousePosition;
     fifthLine->drawing();
-    if (pitchIndex==4) {
-        fifthLine->trigger = true;
-    } else {
-        fifthLine->trigger = false;
-    }
+//    if (pitchIndex==4) {
+//        fifthLine->trigger = true;
+//    } else {
+//        fifthLine->trigger = false;
+//    }
 
     if (fifthLine->signalOnOff) {
         piano5.setVolume(0.0);
@@ -257,8 +273,11 @@ void myApp::draw(){
     }
 
     if (ofGetFrameNum()%(speed*8)==(speed*4)) {
+        fifthLine->trigger = true;
         piano5.play();
-        piano5.setSpeed(ofMap(fifthLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano5.setSpeed(ofMap(fifthLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        fifthLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -269,11 +288,11 @@ void myApp::draw(){
     sixthLine->mouseButton = mouseButton;
     sixthLine->mousePosition = mousePosition;
     sixthLine->drawing();
-    if (pitchIndex==5) {
-        sixthLine->trigger = true;
-    } else {
-        sixthLine->trigger = false;
-    }
+//    if (pitchIndex==5) {
+//        sixthLine->trigger = true;
+//    } else {
+//        sixthLine->trigger = false;
+//    }
 
     if (sixthLine->signalOnOff) {
         piano6.setVolume(0.0);
@@ -281,8 +300,11 @@ void myApp::draw(){
         piano6.setVolume(hightVolume);
     }
     if (ofGetFrameNum()%(speed*8)==(speed*5)) {
+        sixthLine->trigger = true;
         piano6.play();
-        piano6.setSpeed(ofMap(sixthLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano6.setSpeed(ofMap(sixthLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        sixthLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -293,11 +315,11 @@ void myApp::draw(){
     seventhLine->mouseButton = mouseButton;
     seventhLine->mousePosition = mousePosition;
     seventhLine->drawing();
-    if (pitchIndex==6) {
-        seventhLine->trigger = true;
-    } else {
-        seventhLine->trigger = false;
-    }
+//    if (pitchIndex==6) {
+//        seventhLine->trigger = true;
+//    } else {
+//        seventhLine->trigger = false;
+//    }
 
     if (seventhLine->signalOnOff) {
         piano7.setVolume(0.0);
@@ -305,8 +327,11 @@ void myApp::draw(){
         piano7.setVolume(hightVolume);
     }
     if (ofGetFrameNum()%(speed*8)==(speed*6)) {
+        seventhLine->trigger = true;
         piano7.play();
-        piano7.setSpeed(ofMap(seventhLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano7.setSpeed(ofMap(seventhLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        seventhLine->trigger = false;
     }
     ofPopMatrix();
 
@@ -317,11 +342,11 @@ void myApp::draw(){
     eighthLine->mouseButton = mouseButton;
     eighthLine->mousePosition = mousePosition;
     eighthLine->drawing();
-    if (pitchIndex==7) {
-        eighthLine->trigger = true;
-    } else {
-        eighthLine->trigger = false;
-    }
+//    if (pitchIndex==7) {
+//        eighthLine->trigger = true;
+//    } else {
+//        eighthLine->trigger = false;
+//    }
 
     if (eighthLine->signalOnOff) {
         piano8.setVolume(0.0);
@@ -329,8 +354,11 @@ void myApp::draw(){
         piano8.setVolume(hightVolume);
     }
     if (ofGetFrameNum()%(speed*8)==(speed*7)) {
+        eighthLine->trigger = true;
         piano8.play();
-        piano8.setSpeed(ofMap(eighthLine->lineSize.y, 0, 300, pitchHigh, 0));
+        piano8.setSpeed(ofMap(eighthLine->lineSize.y, 0, pitchMapHigh, pitchHigh, 0));
+    } else {
+        eighthLine->trigger = false;
     }
     ofPopMatrix();
 
