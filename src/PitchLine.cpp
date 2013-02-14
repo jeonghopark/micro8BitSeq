@@ -25,6 +25,16 @@ void PitchLine::drawing() {
     ofRect(lineOnOff, 10, 10);
     ofCircle(lineSize, 6);
     ofLine(lineSize, lineOnOff);
+
+    ofPushStyle();
+    if (trigger) {
+        ofSetColor(255, 180);
+    } else {
+        ofSetColor(255, 40);
+    }
+    ofCircle(0, 0, 4);
+    ofPopStyle();
+
     ofPopStyle();
     
 }

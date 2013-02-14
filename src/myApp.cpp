@@ -20,11 +20,13 @@ float tempoLength;
 
 float postionPitchLine;
 
+int pitchIndex;
+
 //--------------------------------------------------------------
 void myApp::setup(){
     
     ofBackground(40);
-    ofSetFrameRate(60);
+    ofSetFrameRate(30);
     
     ofSetRectMode(OF_RECTMODE_CENTER);
     ofNoFill();
@@ -53,6 +55,16 @@ void myApp::setup(){
 void myApp::update(){
 
     mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
+    int speed = 10;
+    if (ofGetFrameNum()%speed==0) {
+        pitchIndex = pitchIndex + 1;
+    }
+    
+    if (pitchIndex>7) {
+        pitchIndex = 0;
+    }
+    
+    cout << pitchIndex << endl;
     
 }
 
@@ -84,6 +96,11 @@ void myApp::draw(){
     firstLine->mouseButton = mouseButton;
     firstLine->mousePosition = mousePosition;
     firstLine->drawing();
+    if (pitchIndex==0) {
+        firstLine->trigger = true;
+    } else {
+        firstLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -93,6 +110,11 @@ void myApp::draw(){
     secondLine->mouseButton = mouseButton;
     secondLine->mousePosition = mousePosition;
     secondLine->drawing();
+    if (pitchIndex==1) {
+        secondLine->trigger = true;
+    } else {
+        secondLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -102,6 +124,11 @@ void myApp::draw(){
     thirdLine->mouseButton = mouseButton;
     thirdLine->mousePosition = mousePosition;
     thirdLine->drawing();
+    if (pitchIndex==2) {
+        thirdLine->trigger = true;
+    } else {
+        thirdLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -111,6 +138,11 @@ void myApp::draw(){
     forthLine->mouseButton = mouseButton;
     forthLine->mousePosition = mousePosition;
     forthLine->drawing();
+    if (pitchIndex==3) {
+        forthLine->trigger = true;
+    } else {
+        forthLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -120,6 +152,11 @@ void myApp::draw(){
     fifthLine->mouseButton = mouseButton;
     fifthLine->mousePosition = mousePosition;
     fifthLine->drawing();
+    if (pitchIndex==4) {
+        fifthLine->trigger = true;
+    } else {
+        fifthLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -129,6 +166,11 @@ void myApp::draw(){
     sixthLine->mouseButton = mouseButton;
     sixthLine->mousePosition = mousePosition;
     sixthLine->drawing();
+    if (pitchIndex==5) {
+        sixthLine->trigger = true;
+    } else {
+        sixthLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -138,6 +180,11 @@ void myApp::draw(){
     seventhLine->mouseButton = mouseButton;
     seventhLine->mousePosition = mousePosition;
     seventhLine->drawing();
+    if (pitchIndex==6) {
+        seventhLine->trigger = true;
+    } else {
+        seventhLine->trigger = false;
+    }
     ofPopMatrix();
 
     ofPushMatrix();
@@ -147,6 +194,11 @@ void myApp::draw(){
     eighthLine->mouseButton = mouseButton;
     eighthLine->mousePosition = mousePosition;
     eighthLine->drawing();
+    if (pitchIndex==7) {
+        eighthLine->trigger = true;
+    } else {
+        eighthLine->trigger = false;
+    }
     ofPopMatrix();
 
 }
