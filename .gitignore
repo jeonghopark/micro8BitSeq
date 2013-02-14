@@ -1,0 +1,38 @@
+# hidden/temp files
+.DS_Store
+*.swp
+*~.nib
+  
+# Build dir
+build
+bin/*
+  
+# Xcode project files except for the project file
+*.xcodeproj/
+!*.xcodeproj/project.pbxproj
+*..xcconfig
+*.entitlements
+
+# App
+*.app
+
+# addon
+addons/*
+
+# plist
+*.plist
+
+# xcconfig
+*.xcconfig
+
+# openframewokrs files
+*.make
+
+# data files
+*.png
+*.jpg
+*.html
+*.icns
+
+# document files
+*.md
