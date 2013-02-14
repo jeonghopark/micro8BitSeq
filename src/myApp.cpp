@@ -8,7 +8,8 @@ ofVec2f mousePosition;
 
 float distMouseSize, distMouseOnOff;
 
-Boolean mouseButton;
+bool mouseButton;
+bool mouseRelease;
 
 
 ofVec2f setSizePosition, setOnOffPosition;
@@ -21,11 +22,19 @@ float postionPitchLine;
 
 int pitchIndex;
 
+float pitchHigh;
+
+string fileName = "bell_sample_01.wav";
+
+int speed;
+
+float hightVolume;
+
 //--------------------------------------------------------------
 void myApp::setup(){
 //    ofSetDataPathRoot("../Resources/");
     
-    ofBackground(40);
+    ofBackground(20);
     ofSetFrameRate(30);
     
     ofSetRectMode(OF_RECTMODE_CENTER);
@@ -50,11 +59,41 @@ void myApp::setup(){
     eighthLine = new PitchLine;
 
     // !!!: new Sound player - sample player
-    piano.loadSound("sitar_sample_01.aif");
-    piano.setVolume(0.5f);
-    piano.setMultiPlay(true);
+    
+    hightVolume = 0.3;
+
+    
+    piano1.loadSound(fileName);
+    piano1.setVolume(hightVolume);
+    piano1.setMultiPlay(true);
+    piano2.loadSound(fileName);
+    piano2.setVolume(hightVolume);
+    piano2.setMultiPlay(true);
+    piano3.loadSound(fileName);
+    piano3.setVolume(hightVolume);
+    piano3.setMultiPlay(true);
+    piano4.loadSound(fileName);
+    piano4.setVolume(hightVolume);
+    piano4.setMultiPlay(true);
+    piano5.loadSound(fileName);
+    piano5.setVolume(hightVolume);
+    piano5.setMultiPlay(true);
+    piano6.loadSound(fileName);
+    piano6.setVolume(hightVolume);
+    piano6.setMultiPlay(true);
+    piano7.loadSound(fileName);
+    piano7.setVolume(hightVolume);
+    piano7.setMultiPlay(true);
+    piano8.loadSound(fileName);
+    piano8.setVolume(hightVolume);
+    piano8.setMultiPlay(true);
     
     pitchIndex = -1;
+    
+    pitchHigh = 7.0;
+    
+    speed = 5;
+    
 }
 
 //--------------------------------------------------------------
@@ -62,7 +101,7 @@ void myApp::update(){
     ofSoundUpdate();
 
     mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
-    int speed = 10;
+    
     if (ofGetFrameNum()%speed==0) {
         pitchIndex = pitchIndex + 1;
     }
@@ -111,11 +150,14 @@ void myApp::draw(){
     }
 
     if (firstLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==0) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(firstLine->lineSize.y, 0, 300, 5.0, 0));
+        piano1.setVolume(0.0);
+    } else {
+        piano1.setVolume(hightVolume);
+    }
+        
+    if (ofGetFrameNum()%(speed*8)==(speed*0)) {
+        piano1.play();
+        piano1.setSpeed(ofMap(firstLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     
     ofPopMatrix();
@@ -134,11 +176,14 @@ void myApp::draw(){
     }
 
     if (secondLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==10) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(secondLine->lineSize.y, 0, 300, 5.0, 0));
+        piano2.setVolume(0.0);
+    } else {
+        piano2.setVolume(hightVolume);
+    }
+    
+    if (ofGetFrameNum()%(speed*8)==(speed*1)) {
+        piano2.play();
+        piano2.setSpeed(ofMap(secondLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -156,11 +201,14 @@ void myApp::draw(){
     }
 
     if (thirdLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==20) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(thirdLine->lineSize.y, 0, 300, 5.0, 0));
+        piano3.setVolume(0.0);
+    } else {
+        piano3.setVolume(hightVolume);
+    }
+    
+    if (ofGetFrameNum()%(speed*8)==(speed*2)) {
+        piano3.play();
+        piano3.setSpeed(ofMap(thirdLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -178,11 +226,14 @@ void myApp::draw(){
     }
 
     if (forthLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==30) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(forthLine->lineSize.y, 0, 300, 5.0, 0));
+        piano4.setVolume(0.0);
+    } else {
+        piano4.setVolume(hightVolume);
+    }
+    
+    if (ofGetFrameNum()%(speed*8)==(speed*3)) {
+        piano4.play();
+        piano4.setSpeed(ofMap(forthLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -200,11 +251,14 @@ void myApp::draw(){
     }
 
     if (fifthLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==40) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(fifthLine->lineSize.y, 0, 300, 5.0, 0));
+        piano5.setVolume(0.0);
+    } else {
+        piano5.setVolume(hightVolume);
+    }
+
+    if (ofGetFrameNum()%(speed*8)==(speed*4)) {
+        piano5.play();
+        piano5.setSpeed(ofMap(fifthLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -222,11 +276,13 @@ void myApp::draw(){
     }
 
     if (sixthLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==50) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(sixthLine->lineSize.y, 0, 300, 5.0, 0));
+        piano6.setVolume(0.0);
+    } else {
+        piano6.setVolume(hightVolume);
+    }
+    if (ofGetFrameNum()%(speed*8)==(speed*5)) {
+        piano6.play();
+        piano6.setSpeed(ofMap(sixthLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -244,11 +300,13 @@ void myApp::draw(){
     }
 
     if (seventhLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==60) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(seventhLine->lineSize.y, 0, 300, 5.0, 0));
+        piano7.setVolume(0.0);
+    } else {
+        piano7.setVolume(hightVolume);
+    }
+    if (ofGetFrameNum()%(speed*8)==(speed*6)) {
+        piano7.play();
+        piano7.setSpeed(ofMap(seventhLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 
@@ -266,11 +324,13 @@ void myApp::draw(){
     }
 
     if (eighthLine->signalOnOff) {
-        piano.setVolume(0.0);
-    } else if (ofGetFrameNum()%80==70) {
-        piano.setVolume(0.5);
-        piano.play();
-        piano.setSpeed(ofMap(eighthLine->lineSize.y, 0, 300, 5.0, 0));
+        piano8.setVolume(0.0);
+    } else {
+        piano8.setVolume(hightVolume);
+    }
+    if (ofGetFrameNum()%(speed*8)==(speed*7)) {
+        piano8.play();
+        piano8.setSpeed(ofMap(eighthLine->lineSize.y, 0, 300, pitchHigh, 0));
     }
     ofPopMatrix();
 

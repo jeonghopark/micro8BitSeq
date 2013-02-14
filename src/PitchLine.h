@@ -16,7 +16,6 @@ public:
     
     bool mouseButton;
     
-    
     float _positionPitchLine;
 
     ofVec2f mousePosition;
