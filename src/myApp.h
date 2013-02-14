@@ -32,5 +32,10 @@ class myApp : public ofBaseApp{
     PitchLine *sixthLine;
     PitchLine *seventhLine;
     PitchLine *eighthLine;
+    
+    
+    // new Sound Player
+    ofSoundPlayer piano;
+
 
 };
