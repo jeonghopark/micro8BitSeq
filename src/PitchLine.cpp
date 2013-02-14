@@ -3,7 +3,7 @@
 
 PitchLine::PitchLine() {
 
-    pitchLineDefaultLength = 100;
+    pitchLineDefaultLength = 200;
     lineOnOff = ofVec2f(0, -pitchLineDefaultLength);
     lineSize = ofVec2f(0, pitchLineDefaultLength);
     
@@ -19,12 +19,12 @@ void PitchLine::drawing() {
 
     distanceMouseSize = (lineSize+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
     
-    if ((distanceMouseOnOff<8)&&(mouseButton==true)) {
+    if ((distanceMouseOnOff<10)&&(mouseButton==true)) {
         signalOnOff = toggle(signalOnOff);
     }
 
     
-    if ((distanceMouseSize<8)&&(mouseButton==true)) {
+    if ((distanceMouseSize<15)&&(mouseButton==true)) {
         if (signalOnOff) {
             ofSetColor(255, 20);
         } else {
