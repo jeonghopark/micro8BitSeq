@@ -25,6 +25,8 @@ public:
     ofVec2f lineOnOff;
     ofVec2f lineSize;
 
+    bool trigger;
+    
 };
 
 
