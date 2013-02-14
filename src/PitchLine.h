@@ -1,5 +1,3 @@
-
-
 #ifndef __emptyExample__PitchLine__
 #define __emptyExample__PitchLine__
 
@@ -13,7 +11,8 @@ public:
     PitchLine();
     void drawing();
   
-    float distMouseSize2;
+    float distanceMouseSize;
+    float distanceMouseOnOff;
     
     bool mouseButton;
     
@@ -26,6 +25,10 @@ public:
     ofVec2f lineSize;
 
     bool trigger;
+    
+    bool signalOnOff;
+    
+    bool toggle(bool b);
     
 };
 
