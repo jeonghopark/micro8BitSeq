@@ -35,7 +35,14 @@ class myApp : public ofBaseApp{
     
     
     // new Sound Player
-    ofSoundPlayer piano;
+    ofSoundPlayer piano1;
+    ofSoundPlayer piano2;
+    ofSoundPlayer piano3;
+    ofSoundPlayer piano4;
+    ofSoundPlayer piano5;
+    ofSoundPlayer piano6;
+    ofSoundPlayer piano7;
+    ofSoundPlayer piano8;
 
 
 };

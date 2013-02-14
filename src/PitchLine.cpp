@@ -47,7 +47,7 @@ void PitchLine::drawing() {
 
     ofPushStyle();
     if (trigger) {
-        ofSetColor(255, 180);
+        ofSetColor(255, 220);
     } else {
         ofSetColor(255, 40);
     }
