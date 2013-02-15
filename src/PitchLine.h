@@ -29,8 +29,7 @@ public:
 
     ofVec2f mousePosition;
     ofVec2f lineOnOff;
-    ofVec2f lineSize;
-    
+    ofVec2f pitchLineSize;
     
 };
 

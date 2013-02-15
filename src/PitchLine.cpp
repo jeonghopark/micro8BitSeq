@@ -5,7 +5,7 @@ PitchLine::PitchLine() {
 
     pitchLineDefaultLength = 200;
     lineOnOff = ofVec2f(0, -pitchLineDefaultLength);
-    lineSize = ofVec2f(0, pitchLineDefaultLength);
+    pitchLineSize = ofVec2f(0, pitchLineDefaultLength);
     
     signalOnOff = false;
 }
@@ -17,7 +17,7 @@ void PitchLine::drawing() {
 
     distanceMouseOnOff = (lineOnOff+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
 
-    distanceMouseSize = (lineSize+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
+    distanceMouseSize = (pitchLineSize+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
     
     if ((distanceMouseOnOff<10)&&(mouseReleaseButton==true)) {
         signalOnOff = toggle(signalOnOff);
@@ -30,20 +30,20 @@ void PitchLine::drawing() {
         } else {
             ofSetColor(255, 255);
         }
-        lineSize = ofVec2f(0, mousePosition.y-ofGetHeight()/2);
-        lineOnOff = lineSize-ofVec2f(0, (-ofGetHeight()/2+mousePosition.y)*2);
+        pitchLineSize = ofVec2f(0, mousePosition.y-ofGetHeight()/2);
+        lineOnOff = pitchLineSize-ofVec2f(0, (-ofGetHeight()/2+mousePosition.y)*2);
     } else {
         if (signalOnOff) {
             ofSetColor(255, 20);
         } else {
             ofSetColor(255, 100);
         }
-        lineSize = lineSize;
+        pitchLineSize = pitchLineSize;
         lineOnOff = lineOnOff;
     }
     ofRect(lineOnOff, 10, 10);
-    ofCircle(lineSize, 6);
-    ofLine(lineSize, lineOnOff);
+    ofCircle(pitchLineSize, 6);
+    ofLine(pitchLineSize, lineOnOff);
 
     ofPushStyle();
     if (trigger) {

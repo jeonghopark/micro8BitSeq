@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "PitchLine.h"
 
+#define NUM 8
+
 class myApp : public ofBaseApp{
 
 	public:
@@ -22,31 +24,36 @@ class myApp : public ofBaseApp{
     
         bool toggle (bool b);
     
-    void lineStructure(float _positionPitchLine);
-
     int speed;
+    
+    PitchLine *pitchLines[NUM];
+    
+    ofSoundPlayer samplePiano[NUM];
+    string fileName;
 
-    PitchLine *firstLine;
-    PitchLine *secondLine;
-    PitchLine *thirdLine;
-    PitchLine *forthLine;
-    PitchLine *fifthLine;
-    PitchLine *sixthLine;
-    PitchLine *seventhLine;
-    PitchLine *eighthLine;
-    
-    
-    // new Sound Player
-    ofSoundPlayer piano1;
-    ofSoundPlayer piano2;
-    ofSoundPlayer piano3;
-    ofSoundPlayer piano4;
-    ofSoundPlayer piano5;
-    ofSoundPlayer piano6;
-    ofSoundPlayer piano7;
-    ofSoundPlayer piano8;
-    
-    int preMouseClick, mouseclick;
     bool mouseClickRealease;
 
+    ofVec2f tempoLineOnOff, tempoLineSize;
+
+    ofVec2f mousePos, mouseDraggedPos, mouseClickPos, mouseReleasePos;
+    ofVec2f preMousePosition;
+    ofVec2f mousePosition;
+    
+    float distMouseSize, distMouseOnOff;
+    
+    bool mouseButton;
+    bool mouseRelease;
+    
+    ofVec2f setSizePosition, setOnOffPosition;
+    
+    int firstLineDefaultLength;
+    float tempoLineLength;
+    float postionPitchLine;
+    
+    
+    float highVolume;
+    
+    void justOneclick();
+    int preMouseClick, mouseclick;    
+    
 };
