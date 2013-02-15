@@ -24,16 +24,16 @@ int pitchIndex;
 
 float pitchHigh;
 
-string fileName = "A-HiHat2ClosedB.aif";
+string fileName = "bell_sample_01.wav";
 
-int speed;
 
 float hightVolume;
 float pitchMapHigh;
 
+
 //--------------------------------------------------------------
 void myApp::setup(){
-//    ofSetDataPathRoot("../Resources/");
+    //    ofSetDataPathRoot("../Resources/");
     
     ofBackground(20);
     ofSetFrameRate(30);
@@ -45,7 +45,7 @@ void myApp::setup(){
     ofSetCircleResolution(24);
     
     mouseButton = false;
-
+    
     tempoLineDefaultLength = 400;
     tempoLineOnOff = ofVec2f(-tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
     tempoLineSize = ofVec2f(tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
@@ -58,11 +58,10 @@ void myApp::setup(){
     sixthLine = new PitchLine;
     seventhLine = new PitchLine;
     eighthLine = new PitchLine;
-
+    
     // !!!: new Sound player - sample player
     
     hightVolume = 0.3;
-
     
     piano1.loadSound(fileName);
     piano1.setVolume(hightVolume);
@@ -95,13 +94,13 @@ void myApp::setup(){
     pitchMapHigh = ofGetHeight()/2;
     
     speed = 5;
-    
+    preMouseClick = 0;
 }
 
 //--------------------------------------------------------------
 void myApp::update(){
     ofSoundUpdate();
-
+    
     mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
     
     distMouseSize = tempoLineSize.distance(mousePosition);
@@ -118,15 +117,7 @@ void myApp::update(){
     
     
     speed = int(ofMap(tempoLength, 0, ofGetWidth(), 2, 10));
-    cout << speed << endl;
     
-    if (ofGetFrameNum()%speed*2==0) {
-        pitchIndex = pitchIndex + 1;
-    }
-    if (pitchIndex>7) {
-        pitchIndex = 0;
-    }
-     
 }
 
 //--------------------------------------------------------------
@@ -137,28 +128,24 @@ void myApp::draw(){
     ofCircle(tempoLineSize, 6);
     ofLine(tempoLineOnOff, tempoLineSize);
     ofPopStyle();
-
-
+    
+    
     ofPushMatrix();
     float postionPitchLine1 = (tempoLineOnOff.x+tempoLength*1/10+tempoLength*1/20);
     ofTranslate(postionPitchLine1, ofGetHeight()/2);
     firstLine->_positionPitchLine = postionPitchLine1;
     firstLine->mouseButton = mouseButton;
+    firstLine->mouseReleaseButton = mouseClickRealease;
     firstLine->mousePosition = mousePosition;
     firstLine->drawing();
-
-//    if (pitchIndex==0) {
-//        firstLine->trigger = true;
-//    } else {
-//        firstLine->trigger = false;
-//    }
-
+    
+    
     if (firstLine->signalOnOff) {
         piano1.setVolume(0.0);
     } else {
         piano1.setVolume(hightVolume);
     }
-        
+    
     if (ofGetFrameNum()%(speed*8)==(speed*0)) {
         firstLine->trigger = true;
         piano1.play();
@@ -168,20 +155,16 @@ void myApp::draw(){
     }
     
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine2 = (tempoLineOnOff.x+tempoLength*2/10+tempoLength*1/20);
     ofTranslate(postionPitchLine2, ofGetHeight()/2);
     secondLine->_positionPitchLine = postionPitchLine2;
     secondLine->mouseButton = mouseButton;
+    secondLine->mouseReleaseButton = mouseClickRealease;
     secondLine->mousePosition = mousePosition;
     secondLine->drawing();
-//    if (pitchIndex==1) {
-//        secondLine->trigger = true;
-//    } else {
-//        secondLine->trigger = false;
-//    }
-
+    
     if (secondLine->signalOnOff) {
         piano2.setVolume(0.0);
     } else {
@@ -196,20 +179,16 @@ void myApp::draw(){
         secondLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine3 = (tempoLineOnOff.x+tempoLength*3/10+tempoLength*1/20);
     ofTranslate(postionPitchLine3, ofGetHeight()/2);
     thirdLine->_positionPitchLine = postionPitchLine3;
     thirdLine->mouseButton = mouseButton;
+    thirdLine->mouseReleaseButton = mouseClickRealease;
     thirdLine->mousePosition = mousePosition;
     thirdLine->drawing();
-//    if (pitchIndex==2) {
-//        thirdLine->trigger = true;
-//    } else {
-//        thirdLine->trigger = false;
-//    }
-
+    
     if (thirdLine->signalOnOff) {
         piano3.setVolume(0.0);
     } else {
@@ -224,20 +203,16 @@ void myApp::draw(){
         thirdLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine4 = (tempoLineOnOff.x+tempoLength*4/10+tempoLength*1/20);
     ofTranslate(postionPitchLine4, ofGetHeight()/2);
     forthLine->_positionPitchLine = postionPitchLine4;
     forthLine->mouseButton = mouseButton;
+    forthLine->mouseReleaseButton = mouseClickRealease;
     forthLine->mousePosition = mousePosition;
     forthLine->drawing();
-//    if (pitchIndex==3) {
-//        forthLine->trigger = true;
-//    } else {
-//        forthLine->trigger = false;
-//    }
-
+    
     if (forthLine->signalOnOff) {
         piano4.setVolume(0.0);
     } else {
@@ -252,26 +227,22 @@ void myApp::draw(){
         forthLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine5 = (tempoLineOnOff.x+tempoLength*5/10+tempoLength*1/20);
     ofTranslate(postionPitchLine5, ofGetHeight()/2);
     fifthLine->_positionPitchLine = postionPitchLine5;
     fifthLine->mouseButton = mouseButton;
+    fifthLine->mouseReleaseButton = mouseClickRealease;
     fifthLine->mousePosition = mousePosition;
     fifthLine->drawing();
-//    if (pitchIndex==4) {
-//        fifthLine->trigger = true;
-//    } else {
-//        fifthLine->trigger = false;
-//    }
-
+    
     if (fifthLine->signalOnOff) {
         piano5.setVolume(0.0);
     } else {
         piano5.setVolume(hightVolume);
     }
-
+    
     if (ofGetFrameNum()%(speed*8)==(speed*4)) {
         fifthLine->trigger = true;
         piano5.play();
@@ -280,20 +251,16 @@ void myApp::draw(){
         fifthLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine6 = (tempoLineOnOff.x+tempoLength*6/10+tempoLength*1/20);
     ofTranslate(postionPitchLine6, ofGetHeight()/2);
     sixthLine->_positionPitchLine = postionPitchLine6;
     sixthLine->mouseButton = mouseButton;
+    sixthLine->mouseReleaseButton = mouseClickRealease;
     sixthLine->mousePosition = mousePosition;
     sixthLine->drawing();
-//    if (pitchIndex==5) {
-//        sixthLine->trigger = true;
-//    } else {
-//        sixthLine->trigger = false;
-//    }
-
+    
     if (sixthLine->signalOnOff) {
         piano6.setVolume(0.0);
     } else {
@@ -307,20 +274,16 @@ void myApp::draw(){
         sixthLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine7 = (tempoLineOnOff.x+tempoLength*7/10+tempoLength*1/20);
     ofTranslate(postionPitchLine7, ofGetHeight()/2);
     seventhLine->_positionPitchLine = postionPitchLine7;
     seventhLine->mouseButton = mouseButton;
+    seventhLine->mouseReleaseButton = mouseClickRealease;
     seventhLine->mousePosition = mousePosition;
     seventhLine->drawing();
-//    if (pitchIndex==6) {
-//        seventhLine->trigger = true;
-//    } else {
-//        seventhLine->trigger = false;
-//    }
-
+    
     if (seventhLine->signalOnOff) {
         piano7.setVolume(0.0);
     } else {
@@ -334,23 +297,22 @@ void myApp::draw(){
         seventhLine->trigger = false;
     }
     ofPopMatrix();
-
+    
     ofPushMatrix();
     float postionPitchLine8 = (tempoLineOnOff.x+tempoLength*8/10+tempoLength*1/20);
     ofTranslate(postionPitchLine8, ofGetHeight()/2);
     eighthLine->_positionPitchLine = postionPitchLine8;
     eighthLine->mouseButton = mouseButton;
+    eighthLine->mouseReleaseButton = mouseClickRealease;
     eighthLine->mousePosition = mousePosition;
     eighthLine->drawing();
-//    if (pitchIndex==7) {
-//        eighthLine->trigger = true;
-//    } else {
-//        eighthLine->trigger = false;
-//    }
-
-    if (eighthLine->signalOnOff) {
+    
+    if (eighthLine->signalOnOff)
+    {
         piano8.setVolume(0.0);
-    } else {
+    }
+    else
+    {
         piano8.setVolume(hightVolume);
     }
     if (ofGetFrameNum()%(speed*8)==(speed*7)) {
@@ -361,10 +323,20 @@ void myApp::draw(){
         eighthLine->trigger = false;
     }
     ofPopMatrix();
+    
+
+    if ((preMouseClick-mouseclick)==-1)
+    {
+        mouseClickRealease = true;
+    }
+    else
+    {
+        mouseClickRealease = false;
+    }
+    preMouseClick = mouseclick;
+    
 
 }
-
-
 
 
 //--------------------------------------------------------------
@@ -389,26 +361,34 @@ void myApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void myApp::mouseMoved(int x, int y){
-
+    
 }
 
 //--------------------------------------------------------------
 void myApp::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
-void myApp::mousePressed(int x, int y, int button){
-    if (button==0) {
+void myApp::mousePressed(int x, int y, int button)
+{
+    if (button==0)
+    {
         mouseButton = true;
+        mouseclick = 1;
     }
+    
+
 }
 
 //--------------------------------------------------------------
-void myApp::mouseReleased(int x, int y, int button){
-    if (button==0) {
+void myApp::mouseReleased(int x, int y, int button)
+{
+    if (button==0)
+    {
         mouseButton = false;
-    } 
+        mouseclick = 0;
+    }
 }
 
 //--------------------------------------------------------------
