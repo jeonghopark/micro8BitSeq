@@ -1,10 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-
 #include "PitchLine.h"
 
 class myApp : public ofBaseApp{
+
 	public:
 		void setup();
 		void update();
@@ -23,7 +23,9 @@ class myApp : public ofBaseApp{
         bool toggle (bool b);
     
     void lineStructure(float _positionPitchLine);
-    
+
+    int speed;
+
     PitchLine *firstLine;
     PitchLine *secondLine;
     PitchLine *thirdLine;
@@ -43,6 +45,8 @@ class myApp : public ofBaseApp{
     ofSoundPlayer piano6;
     ofSoundPlayer piano7;
     ofSoundPlayer piano8;
-
+    
+    int preMouseClick, mouseclick;
+    bool mouseClickRealease;
 
 };

@@ -3,31 +3,34 @@
 
 #include "ofMain.h"
 
-
 class PitchLine {
-  
+
+private:
+
+    float distanceMouseSize;
+    float distanceMouseOnOff;
+
+    bool toggle(bool b);
+
+    float pitchLineDefaultLength;
+
 public:
     
     PitchLine();
     void drawing();
   
-    float distanceMouseSize;
-    float distanceMouseOnOff;
-    
     bool mouseButton;
+    bool mouseReleaseButton;
     
     float _positionPitchLine;
 
+    bool trigger;
+    bool signalOnOff;
+
     ofVec2f mousePosition;
-    float pitchLineDefaultLength;
     ofVec2f lineOnOff;
     ofVec2f lineSize;
-
-    bool trigger;
     
-    bool signalOnOff;
-    
-    bool toggle(bool b);
     
 };
 

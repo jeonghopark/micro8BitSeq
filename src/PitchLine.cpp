@@ -8,18 +8,18 @@ PitchLine::PitchLine() {
     lineSize = ofVec2f(0, pitchLineDefaultLength);
     
     signalOnOff = false;
-
 }
 
 void PitchLine::drawing() {
 
+    
     ofPushStyle();
 
     distanceMouseOnOff = (lineOnOff+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
 
     distanceMouseSize = (lineSize+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
     
-    if ((distanceMouseOnOff<10)&&(mouseButton==true)) {
+    if ((distanceMouseOnOff<10)&&(mouseReleaseButton==true)) {
         signalOnOff = toggle(signalOnOff);
     }
 
