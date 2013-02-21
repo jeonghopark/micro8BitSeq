@@ -9,6 +9,8 @@ private:
 
     float distanceMouseSize;
     float distanceMouseOnOff;
+    float distanceMouseRandomOnOff;
+    float distanceMouseRandomSize;
 
     bool toggle(bool b);
 
@@ -30,6 +32,12 @@ public:
     ofVec2f mousePosition;
     ofVec2f lineOnOff;
     ofVec2f pitchLineSize;
+    ofVec2f randomOnOff;
+    ofVec2f randomLineSize;
+    
+    int triggerCount;
+    
+    bool signalOnOffControl;
     
 };
 

@@ -5,18 +5,16 @@
 void myApp::setup()
 {
     //    ofSetDataPathRoot("../Resources/");
-    ofBackground(20);
+    ofBackground(ofRandom(255), ofRandom(255), ofRandom(255), 255);
+    ofSetWindowTitle("Micro 8Bit Sequencer");
     ofSetFrameRate(30);
-    
     ofSetRectMode(OF_RECTMODE_CENTER);
     ofNoFill();
-    
     ofEnableAlphaBlending();
     ofSetCircleResolution(24);
-    
     mouseButton = false;
     
-    int tempoLineDefaultLength = 400;
+    int tempoLineDefaultLength = 200;
     tempoLineOnOff = ofVec2f(-tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
     tempoLineSize = ofVec2f(tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
     
@@ -25,7 +23,7 @@ void myApp::setup()
     speed = 5;
     preMouseClick = 0;
     
-    fileName = "bell_sample_01.wav";
+    fileName = "bell_sample_04.wav";
     
     for (int i = 0; i<NUM; i++)
     {
@@ -34,26 +32,31 @@ void myApp::setup()
         samplePiano[i].setVolume(highVolume);
         samplePiano[i].setMultiPlay(true);
     }
+    
+    triggerCount = -1;
+    
 }
 
 //--------------------------------------------------------------
 void myApp::update()
 {
+    ofSetWindowShape(400, 400);
+    
     ofSoundUpdate();
     
     mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
     
     distMouseSize = tempoLineSize.distance(mousePosition);
     
-    if ((distMouseSize<15)&&(mouseButton==true))
+    if ((distMouseSize<12)&&(mouseButton==true))
     {
-        ofSetColor(255, 255);
+        ofSetColor(255, 255, 255, 255);
         tempoLineSize = ofVec2f(mousePosition.x, ofGetHeight()/2);
         tempoLineOnOff = tempoLineSize-ofVec2f((-ofGetWidth()/2+mousePosition.x)*2, 0);
     }
     else
     {
-        ofSetColor(255, 100);
+        ofSetColor(255, 255, 255, 120);
         tempoLineSize = tempoLineSize;
         tempoLineOnOff = tempoLineOnOff;
     }
@@ -67,10 +70,9 @@ void myApp::update()
 //--------------------------------------------------------------
 void myApp::draw()
 {
-    
     ofPushStyle();
-    ofRect(tempoLineOnOff, 10, 10);
-    ofCircle(tempoLineSize, 6);
+    ofRect(tempoLineOnOff, 7, 7);
+    ofCircle(tempoLineSize, 4);
     ofLine(tempoLineOnOff, tempoLineSize);
     ofPopStyle();
     
@@ -94,11 +96,17 @@ void myApp::draw()
             samplePiano[i].setVolume(highVolume);
         }
         
+        if (triggerCount%2 == 0)
+        {
+            //            pitchLines[i]->trigger = false;
+        }
+        
         if (ofGetFrameNum()%(speed*8)==(speed*i))
         {
             pitchLines[i]->trigger = true;
+            samplePiano[i].setSpeed(ofMap(pitchLines[i]->pitchLineSize.y, 0, ofGetHeight()/2, 7.0, 0) * round(ofRandom(0,4))/4.0);
             samplePiano[i].play();
-            samplePiano[i].setSpeed(ofMap(pitchLines[i]->pitchLineSize.y, 0, ofGetHeight()/2, 7.0, 0) * ofRandom(0.95,1.05));
+            triggerCount = triggerCount + 1;
         }
         else
         {
@@ -106,9 +114,8 @@ void myApp::draw()
         }
         
         ofPopMatrix();
-        
     }
-    
+
     justOneclick();
     
 }
