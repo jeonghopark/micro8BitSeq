@@ -54,6 +54,8 @@ class myApp : public ofBaseApp{
     float highVolume;
     
     void justOneclick();
-    int preMouseClick, mouseclick;    
+    int preMouseClick, mouseclick;
+    
+    int triggerCount;
     
 };
