@@ -15,8 +15,8 @@ void myApp::setup()
     mouseButton = false;
     
     int tempoLineDefaultLength = 200;
-    tempoLineOnOff = ofVec2f(-tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
-    tempoLineSize = ofVec2f(tempoLineDefaultLength/2+ofGetWidth()/2, ofGetHeight()/2);
+    tempoLineOnOff = ofVec2f(-tempoLineDefaultLength/2+ofGetWidth()/4, ofGetHeight()/2);
+    tempoLineSize = ofVec2f(tempoLineDefaultLength/2+ofGetWidth()/4, ofGetHeight()/2);
     
     highVolume = 0.3;
     
@@ -40,7 +40,7 @@ void myApp::setup()
 //--------------------------------------------------------------
 void myApp::update()
 {
-    ofSetWindowShape(400, 400);
+//    ofSetWindowShape(800, 400);
     
     ofSoundUpdate();
     
@@ -63,7 +63,7 @@ void myApp::update()
     
     tempoLineLength = tempoLineOnOff.distance(tempoLineSize);
     
-    speed = int(ofMap(tempoLineLength, 0, ofGetWidth(), 2, 10));
+    speed = int(ofMap(tempoLineLength, 0, ofGetWidth(), 3, 15));
     
 }
 
