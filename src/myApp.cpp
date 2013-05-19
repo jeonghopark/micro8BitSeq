@@ -42,9 +42,9 @@ void myApp::setup()
     //    tempoLineDefaultLength = tempoLineOnOffPos.distance(tempoLinesizeRect);
     
     
-    tempoLine.onOffRectPos = ofVec2f(100, 0);
-    tempoLine.sizeRectPos = ofVec2f(ofGetWidth()-100, 0);
-    tempoLine.length = tempoLine.onOffRectPos.distance(tempoLine.sizeRectPos);
+    tempoLine.length = 400;
+    tempoLine.onOffRectPos.x = -tempoLine.length/2;
+    tempoLine.sizeRectPos.x = tempoLine.length/2;
     tempoLine.bOnOffBeingClick = true;
     
     fileName = "bell_sample_04.wav";
@@ -53,8 +53,8 @@ void myApp::setup()
     nElementLine = 8;
     for (int i = 0; i<nElementLine; i++)
     {
-        spaceLine = tempoLineDefaultLength / 10;
-        elementLines[i].position = ofVec2f(tempoLineOnOffPos.x + spaceLine + spaceLine/2 + spaceLine*i, tempoLineOnOffPos.y);
+        spaceLine = tempoLine.length / 10;
+        elementLines[i].position = ofVec2f(spaceLine + spaceLine/2 + spaceLine*i, tempoLineOnOffPos.y);
         elementLines[i].sizeRect = ofVec2f(elementLines[i].position.x, elementLines[i].position.y+ofRandom(20,ofGetHeight()*2/5));
         elementLines[i].onOffRect = elementLines[i].sizeRect * ofVec2f(1,-1) + ofVec2f(0,ofGetHeight());
 		elementLines[i].bSizeOver = false;
@@ -94,9 +94,18 @@ void myApp::update()
     //    tempoLine.onOffRectPos = ofVec2f(100, 0);
     //  tempoLine.sizeRectPos = ofVec2f(ofGetWidth()-100, 0);
     
-    tempoLine.onOffRectPos = ofVec2f(ofGetWidth()-tempoLine.sizeRectPos.x, 0);
-    tempoLine.length = tempoLine.sizeRectPos.distance(tempoLine.onOffRectPos);
-    speed = int(ofMap(tempoLine.length, 0, ofGetWidth(), 3, 15));
+//    tempoLine.onOffRectPos = ofVec2f(ofGetWidth()-tempoLine.sizeRectPos.x, 0);
+//    tempoLine.length = tempoLine.sizeRectPos.distance(tempoLine.onOffRectPos);
+
+//    tempoLine.length = (ofGetWidth()/2-100) * 2;
+
+    tempoLine.onOffRectPos.x = -tempoLine.length/2;
+    tempoLine.sizeRectPos.x = tempoLine.length/2;
+
+
+    
+//    speed = int(ofMap(tempoLine.length, 0, ofGetWidth(), 3, 15));
+    speed = int(tempoLine.length/40);
     
     
     ofSoundUpdate();
@@ -128,7 +137,7 @@ void myApp::update()
         if (ofGetFrameNum()%(speed*8)==(speed*i))
         {
             elementLines[i].onOffTrigger = true;
-            elementLines[i].samplePlay.setSpeed(ofMap(elementLines[i].sizeRect.y, 0, ofGetHeight()/2, 3.0, 0));
+            elementLines[i].samplePlay.setSpeed(ofMap(elementLines[i].sizeRect.y, 0, ofGetHeight()/2, 3.0, 0) * ofRandom(0.75,1.25));
             
             if ((elementLines[i].soundTrigger)&&tempoLine.bOnOffBeingClick)
                 elementLines[i].samplePlay.play();
@@ -169,7 +178,7 @@ void myApp::update()
 //--------------------------------------------------------------
 void myApp::draw()
 {
-    ofTranslate(0, ofGetHeight()/2);
+    ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
     
     ofPushStyle();
     
@@ -365,7 +374,9 @@ void myApp::keyReleased(int key)
 //--------------------------------------------------------------
 void myApp::mouseMoved(int x, int y)
 {
-    float diffTempoLineOnOffx = x - tempoLine.onOffRectPos.x;
+    
+    
+    float diffTempoLineOnOffx = x - ofGetWidth()/2 - tempoLine.onOffRectPos.x;
     float diffTempoLineOnOffy = y - ofGetHeight()/2 -tempoLine.onOffRectPos.y;
     float diffTempoLineOnOff = sqrt(diffTempoLineOnOffx*diffTempoLineOnOffx + diffTempoLineOnOffy*diffTempoLineOnOffy);
     if (diffTempoLineOnOff < 7)
@@ -377,7 +388,7 @@ void myApp::mouseMoved(int x, int y)
         tempoLine.bOnOffOver = false;
     }
     
-    float diffTempoLineSizex = x - tempoLine.sizeRectPos.x;
+    float diffTempoLineSizex = x - ofGetWidth()/2 - tempoLine.sizeRectPos.x;
     float diffTempoLineSizey = y - ofGetHeight()/2 - tempoLine.sizeRectPos.y;
     float distTempoLineSizeSize = sqrt(diffTempoLineSizex*diffTempoLineSizex + diffTempoLineSizey*diffTempoLineSizey);
     if (distTempoLineSizeSize < 7)
@@ -392,7 +403,7 @@ void myApp::mouseMoved(int x, int y)
     
     for (int i = 0; i < nElementLine; i++)
     {
-		float diffSizex = x - elementLines[i].sizeRect.x;
+		float diffSizex = x - ofGetWidth()/2 - elementLines[i].sizeRect.x;
 		float diffSizey = y - ofGetHeight()/2 - elementLines[i].sizeRect.y;
 		float distSize = sqrt(diffSizex*diffSizex + diffSizey*diffSizey);
 		if (distSize < elementLines[i].width)
@@ -404,7 +415,7 @@ void myApp::mouseMoved(int x, int y)
 			elementLines[i].bSizeOver = false;
 		}
         
-		float diffOnOffx = x - elementLines[i].onOffRect.x;
+		float diffOnOffx = x - ofGetWidth()/2 - elementLines[i].onOffRect.x;
 		float diffOnOffy = y - ofGetHeight()/2 - elementLines[i].onOffRect.y;
 		float distOnOff = sqrt(diffOnOffx*diffOnOffx + diffOnOffy*diffOnOffy);
 		if (distOnOff < elementLines[i].width)
@@ -420,6 +431,17 @@ void myApp::mouseMoved(int x, int y)
 
 //--------------------------------------------------------------
 void myApp::mouseDragged(int x, int y, int button){
+
+    if (x<ofGetWidth()/2+50)
+        x = ofGetWidth()/2+50;
+    if (x>ofGetWidth()-10)
+        x = ofGetWidth()-10;
+    if (y<ofGetHeight()/2+10)
+        y = ofGetHeight()/2+10;
+    if (y>ofGetHeight()-10)
+        y = ofGetHeight()-10;
+
+    
     for (int i = 0; i < nElementLine; i++)
     {
 		if (elementLines[i].bSizeBeingDragged == true)
@@ -429,10 +451,13 @@ void myApp::mouseDragged(int x, int y, int button){
 		}
 	}
     
+    mouseDraggedPos.x = x;
+    
     if (tempoLine.bSizeBeingDragged == true)
     {
         //			elementLines[i].sizeRect.x = x - ofGetWidth()/2;
-        tempoLine.sizeRectPos.x = x;
+//        tempoLine.sizeRectPos.x = x;
+        tempoLine.length = (x - ofGetWidth()/2) * 2;
     }
 }
 
@@ -440,7 +465,7 @@ void myApp::mouseDragged(int x, int y, int button){
 void myApp::mousePressed(int x, int y, int button)
 {
     
-    float diffTempoLineSizex = x - tempoLine.sizeRectPos.x;
+    float diffTempoLineSizex = x - ofGetWidth()/2 - tempoLine.sizeRectPos.x;
     float diffTempoLineSizey = y - ofGetHeight()/2 -tempoLine.sizeRectPos.y;
     float distTempoLineSizeSize = sqrt(diffTempoLineSizex*diffTempoLineSizex + diffTempoLineSizey*diffTempoLineSizey);
     if (distTempoLineSizeSize < 7)
@@ -452,7 +477,7 @@ void myApp::mousePressed(int x, int y, int button)
         tempoLine.bSizeBeingDragged = false;
     }
     
-    float diffTempoLineOnOffx = x - tempoLine.onOffRectPos.x;
+    float diffTempoLineOnOffx = x - ofGetWidth()/2 - tempoLine.onOffRectPos.x;
     float diffTempoLineOnOffy = y - ofGetHeight()/2 -tempoLine.onOffRectPos.y;
     float diffTempoLineOnOff = sqrt(diffTempoLineOnOffx*diffTempoLineOnOffx + diffTempoLineOnOffy*diffTempoLineOnOffy);
     if (diffTempoLineOnOff < 7)
@@ -464,7 +489,7 @@ void myApp::mousePressed(int x, int y, int button)
     
     for (int i = 0; i < nElementLine; i++)
     {
-		float diffSizex = x - elementLines[i].sizeRect.x;
+		float diffSizex = x - ofGetWidth()/2 - elementLines[i].sizeRect.x;
 		float diffSizey = y - ofGetHeight()/2 - elementLines[i].sizeRect.y;
 		float distSize = sqrt(diffSizex*diffSizex + diffSizey*diffSizey);
 		if (distSize < elementLines[i].width)
@@ -479,7 +504,7 @@ void myApp::mousePressed(int x, int y, int button)
     
     for (int i = 0; i < nElementLine; i++)
     {
-		float diffOnOffx = x - elementLines[i].onOffRect.x;
+		float diffOnOffx = x - ofGetWidth()/2- elementLines[i].onOffRect.x;
 		float diffOnOffy = y - ofGetHeight()/2 - elementLines[i].onOffRect.y;
 		float diffOnOff = sqrt(diffOnOffx*diffOnOffx + diffOnOffy*diffOnOffy);
 		if (diffOnOff < elementLines[i].width)
