@@ -22,8 +22,8 @@ typedef struct
     bool soundTrigger;
     int counter;
     ofSoundPlayer samplePlay;
-    
-}controlElementLine;
+}
+controlElementLine;
 
 typedef struct
 {
@@ -37,8 +37,8 @@ typedef struct
     ofVec2f sizeRectPos;
     ofVec2f sizeRectStart;
     float length;
-    
-}controlTempoLine;
+}
+controlTempoLine;
 
 
 class myApp : public ofBaseApp{
