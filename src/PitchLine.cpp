@@ -22,40 +22,54 @@ void PitchLine::drawing() {
     distanceMouseSize = (pitchLineSize+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
     distanceMouseRandomOnOff = (randomOnOff+ofVec2f(_positionPitchLine, ofGetHeight()/2)).distance(mousePosition);
     
-    if ((distanceMouseRandomOnOff<10)&&(mouseButton==true)) {
+    if ((distanceMouseRandomOnOff<10)&&(mouseButton==true))
+    {
         randomOnOff = ofVec2f(0, mousePosition.y-ofGetHeight()/2);
-    } else {
+    }
+    else
+    {
         randomOnOff = randomOnOff;
     }
     
-    if ((distanceMouseOnOff<10)&&(mouseReleaseButton==true)) {
+    if ((distanceMouseOnOff<10)&&(mouseReleaseButton==true))
+    {
         signalOnOff = toggle(signalOnOff);
     }
     
     
-    if (((distanceMouseRandomOnOff<10)||(distanceMouseSize<10))&&(mouseButton==true)) {
-        if (signalOnOff) {
+    if (((distanceMouseRandomOnOff<10)||(distanceMouseSize<10))&&(mouseButton==true))
+    {
+        if (signalOnOff)
+        {
             ofSetColor(255, 255, 255, 20);
-        } else {
+        }
+        else
+        {
             ofSetColor(255, 255, 255, 255);
         }
-    } else {
-        if (signalOnOff) {
+    }
+    else
+    {
+        if (signalOnOff)
+        {
             ofSetColor(255, 255, 255, 20);
-        } else {
+        }
+        else
+        {
             ofSetColor(255, 255, 255, 100);
         }
     }
     
-    if ((distanceMouseSize<10)&&(mouseButton==true)) {
+    if ((distanceMouseSize<10)&&(mouseButton==true))
+    {
         pitchLineSize = ofVec2f(0, mousePosition.y-ofGetHeight()/2);
         lineOnOff = pitchLineSize-ofVec2f(0, (-ofGetHeight()/2+mousePosition.y)*2);
-    } else {
+    }
+    else
+    {
         pitchLineSize = pitchLineSize;
         lineOnOff = lineOnOff;
     }
-    
-    
     
     
     ofRect(lineOnOff, 5, 5);
@@ -65,16 +79,18 @@ void PitchLine::drawing() {
     ofLine(pitchLineSize, lineOnOff);
     
     ofPushStyle();
-    if (trigger) {
+    if (trigger)
+    {
         ofSetColor(255, 255, 255, 220);
-    } else {
+    } else
+    {
         ofSetColor(255, 255, 255, 40);
     }
+    
     ofCircle(0, 0, 3);
     ofPopStyle();
     
-    
-    
+
     ofPopStyle();
     
 }
