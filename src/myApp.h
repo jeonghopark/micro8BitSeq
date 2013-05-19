@@ -120,4 +120,9 @@ public:
     
     controlTempoLine tempoLine;
     
+
+    vector <ofSoundPlayer> draggedSound;
+    ofPoint dragPt;
+
+    
 };

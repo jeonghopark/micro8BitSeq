@@ -35,13 +35,7 @@ void myApp::setup()
     recordState=0;
     
     mouseButton = false;
-    
-    //    tempoLineDefaultLength = 400;
-    //    tempoLineOnOffPos = ofVec2f(100, 0);
-    //    tempoLinesizeRect = ofVec2f(ofGetWidth()-100, 0);
-    //    tempoLineDefaultLength = tempoLineOnOffPos.distance(tempoLinesizeRect);
-    
-    
+
     tempoLine.length = 400;
     tempoLine.onOffRectPos.x = -tempoLine.length/2;
     tempoLine.sizeRectPos.x = tempoLine.length/2;
@@ -90,42 +84,16 @@ void myApp::setup()
 void myApp::update()
 {
 //    ofSetWindowShape(850, 400);
-    
-    //    tempoLine.onOffRectPos = ofVec2f(100, 0);
-    //  tempoLine.sizeRectPos = ofVec2f(ofGetWidth()-100, 0);
-    
-//    tempoLine.onOffRectPos = ofVec2f(ofGetWidth()-tempoLine.sizeRectPos.x, 0);
-//    tempoLine.length = tempoLine.sizeRectPos.distance(tempoLine.onOffRectPos);
 
-//    tempoLine.length = (ofGetWidth()/2-100) * 2;
 
     tempoLine.onOffRectPos.x = -tempoLine.length/2;
     tempoLine.sizeRectPos.x = tempoLine.length/2;
-
-
     
-//    speed = int(ofMap(tempoLine.length, 0, ofGetWidth(), 3, 15));
     speed = int(tempoLine.length/40);
     
     
     ofSoundUpdate();
-    
-    //    if (tempoLine.bOnOffBeingClick)
-    //    {
-    //        for (int i = 0; i<nElementLine; i++)
-    //        {
-    //            elementLines[i].bOnOffBeingClick = false;
-    //            elementLines[i].soundTrigger = true;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        for (int i = 0; i<nElementLine; i++)
-    //        {
-    //            elementLines[i].bOnOffBeingClick = true;
-    //            elementLines[i].soundTrigger = false;
-    //        }
-    //    }
+
     
     for (int i = 0; i<nElementLine; i++)
     {
@@ -149,29 +117,6 @@ void myApp::update()
         }
         
     }
-    
-    
-    
-    
-    //    mousePosition = ofVec2f(ofGetMouseX(),ofGetMouseY());
-    //
-    //    distMouseSize = tempoLinesizeRect.distance(mousePosition);
-    //
-    //    if ((distMouseSize<12)&&(mouseButton==true))
-    //    {
-    //        ofSetColor(255, 255, 255, 255);
-    //        tempoLinesizeRect = ofVec2f(mousePosition.x, ofGetHeight()/2);
-    //        tempoLineOnOffPos = tempoLinesizeRect-ofVec2f((-ofGetWidth()/2+mousePosition.x)*2, 0);
-    //    }
-    //    else
-    //    {
-    //        ofSetColor(255, 255, 255, 120);
-    //        tempoLinesizeRect = tempoLinesizeRect;
-    //        tempoLineOnOffPos = tempoLineOnOffPos;
-    //    }
-    //
-    
-    
     
 }
 
@@ -523,11 +468,7 @@ void myApp::mousePressed(int x, int y, int button)
 //--------------------------------------------------------------
 void myApp::mouseReleased(int x, int y, int button)
 {
-    if (button==0)
-    {
-        mouseButton = false;
-        mouseclick = 0;
-    }
+
 }
 
 //--------------------------------------------------------------
@@ -541,6 +482,17 @@ void myApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void myApp::dragEvent(ofDragInfo dragInfo){
-    
+void myApp::dragEvent(ofDragInfo dragInfo)
+{
+	if( dragInfo.files.size() > 0 ){
+		draggedSound.assign( dragInfo.files.size(), ofSoundPlayer() );
+		for(int k = 0; k < dragInfo.files.size(); k++){
+			draggedSound[k].loadSound(dragInfo.files[k]);
+            for (int i = 0; i<nElementLine; i++)
+            {
+                elementLines[i].samplePlay.loadSound(dragInfo.files[k]);
+            }
+		}
+        
+	}
 }
