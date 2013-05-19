@@ -36,4 +36,4 @@ addons/*
 *.icns
 
 # document files
-*.md
+!*.md
