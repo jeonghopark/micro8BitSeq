@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include "WavFile.h"
 
-#define NUM 8
-
 typedef struct
 {
 	ofVec2f position;
@@ -20,6 +18,7 @@ typedef struct
     bool soundTrigger;
     int counter;
     ofSoundPlayer samplePlay;
+    int triggerColor;
 }
 controlElementLine;
 
@@ -56,10 +55,12 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    int speed;
-        
-    string fileName;
-        
+    int speedUp;
+    int speedDown;
+    
+    string fileNameUp;
+    string fileNameDown;
+    
     float highVolume;
     
     void audioIn(float * input, int bufferSize, int nChannels);
@@ -73,19 +74,18 @@ public:
     WavFile myWavWriter;
     ofSoundStream soundStream;
 	bool bIsRecording;
-    //	int   sampleRate;
-    //	float           * buffer;
 	int channels;
     int recordState=0;
     
-    
     int nElementLine;
-    controlElementLine elementLines[8];
+    controlElementLine elementLinesDown[8];
+    controlElementLine elementLinesUp[8];
     
-    float spaceLine;
-    int timeCount;
+    float spaceLineDown;
+    float spaceLineUp;
     
-    controlTempoLine tempoLine;
+    controlTempoLine tempoLineDown;
+    controlTempoLine tempoLineUp;
 
     vector <ofSoundPlayer> draggedSound;
     ofPoint dragPt;
