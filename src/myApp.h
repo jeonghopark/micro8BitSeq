@@ -1,11 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "PitchLine.h"
 #include "WavFile.h"
 
 #define NUM 8
-
 
 typedef struct
 {
@@ -58,41 +56,11 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    bool toggle (bool b);
-
     int speed;
-    
-    ofSoundPlayer samplePiano[NUM];
-    PitchLine *pitchLines[NUM];
-    
+        
     string fileName;
-    
-    bool mouseClickRealease;
-    
-    ofVec2f tempoLineOnOffPos, tempoLinesizeRect;
-    
-    ofVec2f mousePos, mouseDraggedPos, mouseClickPos, mouseReleasePos;
-    ofVec2f preMousePosition;
-    ofVec2f mousePosition;
-    
-    float distMouseSize, distMouseOnOff;
-    
-    bool mouseButton;
-    bool mouseRelease;
-    
-    ofVec2f setsizeRectition, setOnOffPosition;
-    
-    int firstLineDefaultLength;
-    float tempoLineLength;
-    float postionPitchLine;
-    
-    
+        
     float highVolume;
-    
-    void justOneclick();
-    int preMouseClick, mouseclick;
-    
-    int triggerCount;
     
     void audioIn(float * input, int bufferSize, int nChannels);
     
@@ -111,7 +79,6 @@ public:
     int recordState=0;
     
     
-    int tempoLineDefaultLength;
     int nElementLine;
     controlElementLine elementLines[8];
     
@@ -119,10 +86,10 @@ public:
     int timeCount;
     
     controlTempoLine tempoLine;
-    
 
     vector <ofSoundPlayer> draggedSound;
     ofPoint dragPt;
-
+    
+    int backgroundColorHue;
     
 };
