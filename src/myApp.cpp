@@ -21,22 +21,25 @@ void myApp::setup()
 	memset(buffer, 0, initialBufferSize * sizeof(float));
     
 	ofSoundStreamSetup(0, 1, this, sampleRate, initialBufferSize, 4);
-	ofSetFrameRate(60);
+	ofSetFrameRate(64);
     
     myWavWriter.setFormat(1, sampleRate, 16);
 	
     recordState=0;
     
-    tempoLineDown.length = 400;
-    tempoLineDown.onOffRectPos.x = -tempoLineDown.length/2;
-    tempoLineDown.sizeRectPos.x = tempoLineDown.length/2;
+    tempoLineDown.length = 500;
+    tempoLineDown.onOffRectPos.x = -tempoLineDown.length/2 + ofGetWidth()/2;
+    tempoLineDown.sizeRectPos.x = tempoLineDown.length/2 + ofGetWidth()/2;
     tempoLineDown.bOnOffBeingClick = true;
-
-    tempoLineUp.length = 400;
-    tempoLineUp.onOffRectPos.x = -tempoLineUp.length/2;
-    tempoLineUp.sizeRectPos.x = tempoLineUp.length/2;
+    
+    tempoLineUp.length = 500;
+    tempoLineUp.onOffRectPos.x = -tempoLineUp.length/2 + ofGetWidth()/2;
+    tempoLineUp.sizeRectPos.x = tempoLineUp.length/2 + ofGetWidth()/2;
     tempoLineUp.bOnOffBeingClick = true;
 
+    tempoLineUp.position.x = 0;
+
+    
     fileNameDown = "bell_sample_04.wav";
     fileNameUp = "A-HiHat2ClosedB.aif";
     highVolume = 0.45;
@@ -77,6 +80,8 @@ void myApp::setup()
     
     speedUp = 15;
     speedDown = 15;
+    
+    tempoLineRelativePos = 0;
 }
 
 //--------------------------------------------------------------
@@ -84,14 +89,25 @@ void myApp::update()
 {
     ofSoundUpdate();
     
-    tempoLineDown.onOffRectPos.x = -tempoLineDown.length/2;
-    tempoLineDown.sizeRectPos.x = tempoLineDown.length/2;
 
-    tempoLineUp.onOffRectPos.x = -tempoLineUp.length/2;
-    tempoLineUp.sizeRectPos.x = tempoLineUp.length/2;
+    tempoLineDown.sizeRectPos.x = tempoLineDown.sizeRectPos.x;
+    tempoLineDown.onOffRectPos.x = ofGetWidth() - tempoLineDown.sizeRectPos.x;
+    tempoLineDown.length = tempoLineDown.sizeRectPos.x - tempoLineDown.onOffRectPos.x;
     
-    speedDown = int(tempoLineDown.length/40);
-    speedUp = int(tempoLineUp.length/40);
+    int ratio = 20;
+
+    tempoLineUp.sizeRectPos.x = tempoLineDown.sizeRectPos.x + ratio/10 * tempoLineDown.length / 10;
+    tempoLineUp.onOffRectPos.x = tempoLineDown.onOffRectPos.x + ratio/10 * tempoLineDown.length / 10;
+    tempoLineUp.length = tempoLineUp.sizeRectPos.x - tempoLineUp.onOffRectPos.x;
+    
+
+    tempoLineRelativePos = tempoLineUp.position.x - tempoLineDown.sizeRectPos.x;
+    cout << "tempoLineRelativePos " << tempoLineRelativePos << endl;
+    //    cout << "Up - Down " << tempoLineUp.position.x-tempoLineDown.sizeRectPos.x << endl;
+
+    
+    speedDown = int(tempoLineDown.length/64);
+    speedUp = int(tempoLineUp.length/64);
     
     
     for (int i = 0; i<nElementLine; i++)
@@ -118,11 +134,14 @@ void myApp::update()
     for (int i = 0; i<nElementLine; i++)
     {
         spaceLineUp = tempoLineUp.length / 10;
-        elementLinesUp[i].position = ofVec2f(tempoLineUp.onOffRectPos.x + spaceLineUp + spaceLineUp/2 + spaceLineUp*i, tempoLineUp.onOffRectPos.y);
+        
+//        elementLinesUp[i].position = ofVec2f(tempoLineUp.onOffRectPos.x + spaceLineUp + spaceLineUp/2 + spaceLineUp*i, tempoLineDown.onOffRectPos.y);
+        elementLinesUp[i].position.x = elementLinesDown[i].position.x + spaceLineUp * ratio/10;
         elementLinesUp[i].sizeRect = ofVec2f(elementLinesUp[i].position.x, elementLinesUp[i].sizeRect.y);
         elementLinesUp[i].onOffRect = elementLinesUp[i].sizeRect * ofVec2f(1,0) + ofVec2f(0,-5);
         
-        if ((ofGetFrameNum()+30)%(speedUp*8)==(speedUp*i))
+        // 0, 8, 16, 24, 32, 40, 48, 56, : 0, 1, 2, 3, 4, 5, 6, 7
+        if ((ofGetFrameNum()+ratio)%(speedUp*8)==(speedUp*i))
         {
             elementLinesUp[i].onOffTrigger = true;
             elementLinesUp[i].samplePlay.setSpeed(ofMap(elementLinesUp[i].sizeRect.y+200, ofGetHeight()/2, 0, 3.0, 0) * ofRandom(0.75,1.25));
@@ -135,6 +154,8 @@ void myApp::update()
             elementLinesUp[i].onOffTrigger = false;
         }
     }
+    
+
 }
 
 //--------------------------------------------------------------
@@ -142,7 +163,7 @@ void myApp::draw()
 {
     
     ofPushMatrix();
-    ofTranslate(ofGetWidth()/2, ofGetHeight()/2+5);
+    ofTranslate(0, ofGetHeight()/2+5);
     
     ofPushStyle();
     ofSetColor(ofColor::fromHsb(0,0,255,140));
@@ -286,12 +307,12 @@ void myApp::draw()
         
     }
     ofPopStyle();
-
+    
     ofPopMatrix();
-
+    
     
     ofPushMatrix();
-    ofTranslate(ofGetWidth()/2+tempoLineUp.position.x, ofGetHeight()/2-5);
+    ofTranslate(0, ofGetHeight()/2-5);
     ofPushStyle();
     ofSetColor(ofColor::fromHsb(0,0,255,140));
     
@@ -434,12 +455,9 @@ void myApp::draw()
         
     }
     ofPopStyle();
-
-
-    ofPopMatrix();
-
     
-
+    
+    ofPopMatrix();
     
     
     ofSetColor(ofColor::fromHsb(backgroundColorHue, 100, 220));
@@ -510,120 +528,61 @@ void myApp::keyReleased(int key)
     
 }
 
+
+bool myApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
+{
+    float diffx = x - xyN.x;
+    float diffy = y - xyN.y;
+    float diff = sqrt(diffx*diffx + diffy*diffy);
+    if (diff < distSize)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool myApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
+{
+    float diffx = x - xyN.x;
+    float diffy = y - xyN.y;
+    float diff = sqrt(diffx*diffx + diffy*diffy);
+    if (diff < distSize)
+    {
+        return _b = !_b;
+    }
+    else
+    {
+        return _b = _b;
+    }
+}
+
+
+
 //--------------------------------------------------------------
 void myApp::mouseMoved(int x, int y)
 {
     
-    float diffTempoLineDownOnOffx = x - ofGetWidth()/2 - tempoLineDown.onOffRectPos.x;
-    float diffTempoLineDownOnOffy = y - ofGetHeight()/2-5 -tempoLineDown.onOffRectPos.y;
-    float diffTempoLineDownOnOff = sqrt(diffTempoLineDownOnOffx*diffTempoLineDownOnOffx + diffTempoLineDownOnOffy*diffTempoLineDownOnOffy);
-    if (diffTempoLineDownOnOff < 7)
-    {
-        tempoLineDown.bOnOffOver = true;
-    }
-    else
-    {
-        tempoLineDown.bOnOffOver = false;
-    }
-    
-    float diffTempoLineDownSizex = x - ofGetWidth()/2 - tempoLineDown.sizeRectPos.x;
-    float diffTempoLineDownSizey = y - ofGetHeight()/2-5 - tempoLineDown.sizeRectPos.y;
-    float diffTempoLineDownSize = sqrt(diffTempoLineDownSizex*diffTempoLineDownSizex + diffTempoLineDownSizey*diffTempoLineDownSizey);
-    if (diffTempoLineDownSize < 7)
-    {
-        tempoLineDown.bSizeOver = true;
-    }
-    else
-    {
-        tempoLineDown.bSizeOver = false;
-    }
-
-    float diffTempoLineUpOnOffx = x - ofGetWidth()/2 - tempoLineUp.onOffRectPos.x;
-    float diffTempoLineUpOnOffy = y - ofGetHeight()/2+5 -tempoLineUp.onOffRectPos.y;
-    float diffTempoLineUpOnOff = sqrt(diffTempoLineUpOnOffx*diffTempoLineUpOnOffx + diffTempoLineUpOnOffy*diffTempoLineUpOnOffy);
-    if (diffTempoLineUpOnOff < 7)
-    {
-        tempoLineUp.bOnOffOver = true;
-    }
-    else
-    {
-        tempoLineUp.bOnOffOver = false;
-    }
-    
-    float diffTempoLineUpSizex = x - ofGetWidth()/2 - tempoLineUp.sizeRectPos.x;
-    float diffTempoLineUpSizey = y - ofGetHeight()/2+5 - tempoLineUp.sizeRectPos.y;
-    float diffTempoLineUpSize = sqrt(diffTempoLineUpSizex*diffTempoLineUpSizex + diffTempoLineUpSizey*diffTempoLineUpSizey);
-    if (diffTempoLineUpSize < 7)
-    {
-        tempoLineUp.bSizeOver = true;
-    }
-    else
-    {
-        tempoLineUp.bSizeOver = false;
-    }
-
-    
+    tempoLineDown.bOnOffOver = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7);
+    tempoLineDown.bSizeOver = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
+    tempoLineUp.bOnOffOver = inOutCal(x, y - ofGetHeight()/2+5, tempoLineUp.onOffRectPos, 7);
+    tempoLineUp.bSizeOver = inOutCal(x, y - ofGetHeight()/2+5, tempoLineUp.sizeRectPos, 7);
+        
     for (int i = 0; i < nElementLine; i++)
     {
-		float diffSizex = x - ofGetWidth()/2 - elementLinesDown[i].sizeRect.x;
-		float diffSizey = y - ofGetHeight()/2-5 - elementLinesDown[i].sizeRect.y;
-		float distSize = sqrt(diffSizex*diffSizex + diffSizey*diffSizey);
-		if (distSize < elementLinesDown[i].width)
-        {
-			elementLinesDown[i].bSizeOver = true;
-		}
-        else
-        {
-			elementLinesDown[i].bSizeOver = false;
-		}
-        
-		float diffOnOffx = x - ofGetWidth()/2 - elementLinesDown[i].onOffRect.x;
-		float diffOnOffy = y - ofGetHeight()/2-5 - elementLinesDown[i].onOffRect.y;
-		float distOnOff = sqrt(diffOnOffx*diffOnOffx + diffOnOffy*diffOnOffy);
-		if (distOnOff < elementLinesDown[i].width)
-        {
-			elementLinesDown[i].bOnOffOver = true;
-		}
-        else
-        {
-			elementLinesDown[i].bOnOffOver = false;
-		}
+        elementLinesDown[i].bSizeOver = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].sizeRect, elementLinesDown[i].width);
+        elementLinesDown[i].bOnOffOver = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, elementLinesDown[i].width);
+        elementLinesUp[i].bSizeOver = inOutCal(x, y - ofGetHeight()/2+5, elementLinesUp[i].sizeRect, elementLinesUp[i].width);
+        elementLinesUp[i].bOnOffOver = inOutCal(x, y - ofGetHeight()/2+5, elementLinesUp[i].onOffRect, elementLinesUp[i].width);
 	}
     
-    for (int i = 0; i < nElementLine; i++)
-    {
-		float diffSizex = x - ofGetWidth()/2 - elementLinesUp[i].sizeRect.x;
-		float diffSizey = y - ofGetHeight()/2+5 - elementLinesUp[i].sizeRect.y;
-		float distSize = sqrt(diffSizex*diffSizex + diffSizey*diffSizey);
-		if (distSize < elementLinesUp[i].width)
-        {
-			elementLinesUp[i].bSizeOver = true;
-		}
-        else
-        {
-			elementLinesUp[i].bSizeOver = false;
-		}
-        
-		float diffOnOffx = x - ofGetWidth()/2 - elementLinesUp[i].onOffRect.x;
-		float diffOnOffy = y - ofGetHeight()/2+5 - elementLinesUp[i].onOffRect.y;
-		float distOnOff = sqrt(diffOnOffx*diffOnOffx + diffOnOffy*diffOnOffy);
-		if (distOnOff < elementLinesUp[i].width)
-        {
-			elementLinesUp[i].bOnOffOver = true;
-		}
-        else
-        {
-			elementLinesUp[i].bOnOffOver = false;
-		}
-	}
 }
 
 //--------------------------------------------------------------
 void myApp::mouseDragged(int x, int y, int button)
 {
-
-    
-    
     for (int i = 0; i < nElementLine; i++)
     {
 		if (elementLinesDown[i].bSizeBeingDragged == true)
@@ -654,120 +613,43 @@ void myApp::mouseDragged(int x, int y, int button)
             x = ofGetWidth()/2+50;
         if (x>ofGetWidth()-10)
             x = ofGetWidth()-10;
-        tempoLineDown.length = (x - ofGetWidth()/2) * 2;
-        tempoLineUp.length = (x - ofGetWidth()/2) * 2;
+        tempoLineDown.sizeRectPos.x = x;
+//        tempoLineUp.length = (x);
     }
-
+    
     if (tempoLineUp.bSizeBeingDragged == true)
     {
-//        tempoLineUp.length = (x - ofGetWidth()/2) * 2;
-        tempoLineUp.position.x = x - ofGetWidth()*3/4;
+        //        tempoLineUp.length = (x - ofGetWidth()/2) * 2;
+        tempoLineUp.position.x = x;
     }
-
+    
 }
+
 
 //--------------------------------------------------------------
 void myApp::mousePressed(int x, int y, int button)
 {
     
-    float diffTempoLineDownSizex = x - ofGetWidth()/2 - tempoLineDown.sizeRectPos.x;
-    float diffTempoLineDownSizey = y - ofGetHeight()/2-5 -tempoLineDown.sizeRectPos.y;
-    float diffTempoLineDownSize = sqrt(diffTempoLineDownSizex*diffTempoLineDownSizex + diffTempoLineDownSizey*diffTempoLineDownSizey);
-    if (diffTempoLineDownSize < 7)
-    {
-        tempoLineDown.bSizeBeingDragged = true;
-    }
-    else
-    {
-        tempoLineDown.bSizeBeingDragged = false;
-    }
-    
-    float diffTempoLineDownOnOffx = x - ofGetWidth()/2 - tempoLineDown.onOffRectPos.x;
-    float diffTempoLineDownOnOffy = y - ofGetHeight()/2-5 -tempoLineDown.onOffRectPos.y;
-    float diffTempoLineDownOnOff = sqrt(diffTempoLineDownOnOffx*diffTempoLineDownOnOffx + diffTempoLineDownOnOffy*diffTempoLineDownOnOffy);
-    if (diffTempoLineDownOnOff < 7)
-    {
-        tempoLineDown.bOnOffBeingClick = !tempoLineDown.bOnOffBeingClick;
-    }
-    
-    float diffTempoLineUpSizex = x - ofGetWidth()/2 - tempoLineUp.sizeRectPos.x;
-    float diffTempoLineUpSizey = y - ofGetHeight()/2+5 -tempoLineUp.sizeRectPos.y;
-    float diffTempoLineUpSize = sqrt(diffTempoLineUpSizex*diffTempoLineUpSizex + diffTempoLineUpSizey*diffTempoLineUpSizey);
-    if (diffTempoLineUpSize < 7)
-    {
-        tempoLineUp.bSizeBeingDragged = true;
-    }
-    else
-    {
-        tempoLineUp.bSizeBeingDragged = false;
-    }
-    
-    float diffTempoLineUpOnOffx = x - ofGetWidth()/2 - tempoLineUp.onOffRectPos.x;
-    float diffTempoLineUpOnOffy = y - ofGetHeight()/2+5 -tempoLineUp.onOffRectPos.y;
-    float diffTempoLineUpOnOff = sqrt(diffTempoLineUpOnOffx*diffTempoLineUpOnOffx + diffTempoLineUpOnOffy*diffTempoLineUpOnOffy);
-    if (diffTempoLineUpOnOff < 7)
-    {
-        tempoLineUp.bOnOffBeingClick = !tempoLineUp.bOnOffBeingClick;
-    }
+    tempoLineDown.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
+    tempoLineUp.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2+5, tempoLineUp.sizeRectPos, 7);
+    tempoLineDown.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7, tempoLineDown.bOnOffBeingClick);
+    tempoLineUp.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2+5, tempoLineUp.onOffRectPos, 7, tempoLineUp.bOnOffBeingClick);
     
     for (int i = 0; i < nElementLine; i++)
     {
-		float diffDownSizex = x - ofGetWidth()/2 - elementLinesDown[i].sizeRect.x;
-		float diffDownSizey = y - ofGetHeight()/2-5 - elementLinesDown[i].sizeRect.y;
-		float diffDownSize = sqrt(diffDownSizex*diffDownSizex + diffDownSizey*diffDownSizey);
-		if (diffDownSize < elementLinesDown[i].width)
+        elementLinesDown[i].bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].sizeRect, elementLinesDown[i].width);
+        elementLinesUp[i].bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2+5, elementLinesUp[i].sizeRect, elementLinesUp[i].width);
+
+        if (tempoLineDown.bOnOffBeingClick)
         {
-			elementLinesDown[i].bSizeBeingDragged = true;
-		}
-        else
+            elementLinesDown[i].bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, 7, elementLinesDown[i].bOnOffBeingClick);
+            elementLinesDown[i].soundTrigger = onOffOut(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, 7, elementLinesDown[i].soundTrigger);
+        }
+        if (tempoLineUp.bOnOffBeingClick)
         {
-			elementLinesDown[i].bSizeBeingDragged = false;
-		}
-	}
-    
-    for (int i = 0; i < nElementLine; i++)
-    {
-		float diffDownOnOffx = x - ofGetWidth()/2- elementLinesDown[i].onOffRect.x;
-		float diffDownOnOffy = y - ofGetHeight()/2-5 - elementLinesDown[i].onOffRect.y;
-		float diffDownOnOff = sqrt(diffDownOnOffx*diffDownOnOffx + diffDownOnOffy*diffDownOnOffy);
-		if (diffDownOnOff < elementLinesDown[i].width)
-        {
-            if (tempoLineDown.bOnOffBeingClick)
-            {
-                elementLinesDown[i].bOnOffBeingClick = !elementLinesDown[i].bOnOffBeingClick;
-                elementLinesDown[i].soundTrigger = !elementLinesDown[i].soundTrigger;
-            }
-		}
-	}
-    
-    for (int i = 0; i < nElementLine; i++)
-    {
-		float diffUpSizex = x - ofGetWidth()/2 - elementLinesUp[i].sizeRect.x;
-		float diffUpSizey = y - ofGetHeight()/2+5 - elementLinesUp[i].sizeRect.y;
-		float diffUpSize = sqrt(diffUpSizex*diffUpSizex + diffUpSizey*diffUpSizey);
-		if (diffUpSize < elementLinesUp[i].width)
-        {
-			elementLinesUp[i].bSizeBeingDragged = true;
-		}
-        else
-        {
-			elementLinesUp[i].bSizeBeingDragged = false;
-		}
-	}
-    
-    for (int i = 0; i < nElementLine; i++)
-    {
-		float diffUpOnOffx = x - ofGetWidth()/2- elementLinesUp[i].onOffRect.x;
-		float diffUpOnOffy = y - ofGetHeight()/2+5 - elementLinesUp[i].onOffRect.y;
-		float diffUpOnOff = sqrt(diffUpOnOffx*diffUpOnOffx + diffUpOnOffy*diffUpOnOffy);
-		if (diffUpOnOff < elementLinesUp[i].width)
-        {
-            if (tempoLineUp.bOnOffBeingClick)
-            {
-                elementLinesUp[i].bOnOffBeingClick = !elementLinesUp[i].bOnOffBeingClick;
-                elementLinesUp[i].soundTrigger = !elementLinesUp[i].soundTrigger;
-            }
-		}
+            elementLinesUp[i].bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2+5, elementLinesUp[i].onOffRect, 7, elementLinesUp[i].bOnOffBeingClick);
+            elementLinesUp[i].soundTrigger = onOffOut(x, y - ofGetHeight()/2+5, elementLinesUp[i].onOffRect, 7, elementLinesUp[i].soundTrigger);
+        }
 	}
     
 }

@@ -55,6 +55,9 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    bool inOutCal(float x, float y, ofVec2f xyN, int distSize);
+    bool onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b);
+    
     int speedUp;
     int speedDown;
     
@@ -91,5 +94,7 @@ public:
     ofPoint dragPt;
     
     int backgroundColorHue;
+    
+    int tempoLineRelativePos;
     
 };
