@@ -25,6 +25,7 @@ controlElementLine;
 typedef struct
 {
 	ofVec2f position;
+	ofVec2f oldPosition;
 	bool 	bSizeBeingDragged;
 	bool 	bOnOffBeingClick;
 	bool 	bSizeOver;
@@ -34,6 +35,9 @@ typedef struct
     ofVec2f sizeRectPos;
     ofVec2f sizeRectStart;
     float length;
+    ofVec2f delayPos;
+	bool 	bDelayPosOver;
+    bool    bDelayPosDragged;
 }
 controlTempoLine;
 
@@ -54,6 +58,8 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    
+    void threadedFunction();
     
     bool inOutCal(float x, float y, ofVec2f xyN, int distSize);
     bool onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b);
@@ -96,5 +102,15 @@ public:
     int backgroundColorHue;
     
     int tempoLineRelativePos;
+    
+    int tempoDistanceFactor;
+    
+    int triggerCounterUp;
+    int triggerCounterDown;
+    
+    int millisUp;
+    int millisDown;
+    bool bangUp;
+    bool bangDown;
     
 };
