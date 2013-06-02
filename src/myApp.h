@@ -90,8 +90,8 @@ public:
     controlElementLine elementLinesDown[8];
     controlElementLine elementLinesUp[8];
     
-    float spaceLineDown;
-    float spaceLineUp;
+    float spacingLineDown;
+    float spacingLineUp;
     
     controlTempoLine tempoLineDown;
     controlTempoLine tempoLineUp;
@@ -113,4 +113,11 @@ public:
     bool bangUp;
     bool bangDown;
     
+    
+
+    ofDirectory dir;
+    vector<ofSoundPlayer> soundsList;
+    
+    int currentSound;
+
 };
