@@ -180,23 +180,16 @@ void myApp::update()
     
 }
 
-
-
-//--------------------------------------------------------------
-void myApp::draw()
+void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos)
 {
-    
-    ofPushMatrix();
-    ofTranslate(0, ofGetHeight()/2+5);
-    
     ofPushStyle();
     ofSetColor(ofColor::fromHsb(0,0,255,140));
     
-    if (tempoLineDown.bOnOffBeingClick)
+    if (_bTOnOff)
     {
         ofNoFill();
         ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (tempoLineDown.bSizeOver)
+        if (_bTSizeOver)
         {
             ofFill();
         }
@@ -208,7 +201,7 @@ void myApp::draw()
     else
     {
         ofSetColor(ofColor::fromHsb(0,0,255,40));
-        if (tempoLineDown.bSizeOver)
+        if (_bTSizeOver)
         {
             ofFill();
         }
@@ -217,13 +210,13 @@ void myApp::draw()
             ofNoFill();
         }
     }
-    ofRect(tempoLineDown.sizeRectPos, 7, 7);
+    ofRect(_vTSizePos, 7, 7);
     
-    if (tempoLineDown.bOnOffBeingClick)
+    if (_bTOnOff)
     {
         ofNoFill();
         ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (tempoLineDown.bOnOffOver)
+        if (_bTOnOffOver)
         {
             ofFill();
         }
@@ -237,9 +230,24 @@ void myApp::draw()
         ofFill();
         ofSetColor(ofColor::fromHsb(0,0,255,40));
     }
-    ofRect(tempoLineDown.onOffRectPos, 7, 7);
-    ofLine(tempoLineDown.onOffRectPos+ofVec2f(4,0), tempoLineDown.sizeRectPos-ofVec2f(4,0));
+    ofRect(_vTOnOffPos, 7, 7);
+    ofLine(_vTOnOffPos+ofVec2f(4,0), _vTSizePos-ofVec2f(4,0));
     ofPopStyle();
+}
+
+void myApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
+{
+    
+}
+
+//--------------------------------------------------------------
+void myApp::draw()
+{
+    
+    ofPushMatrix();
+    ofTranslate(0, ofGetHeight()/2+5);
+    
+    drawingTempoLine(tempoLineDown.bOnOffBeingClick, tempoLineDown.bSizeOver, tempoLineDown.bOnOffOver, tempoLineDown.sizeRectPos, tempoLineDown.onOffRectPos);
     
     ofPushStyle();
     for (int i = 0; i<nElementLine; i++)
@@ -337,58 +345,10 @@ void myApp::draw()
     
     ofPushMatrix();
     ofTranslate(0, ofGetHeight()/2-5);
-    ofPushStyle();
-    ofSetColor(ofColor::fromHsb(0,0,255,140));
-    
-    if (tempoLineUp.bOnOffBeingClick)
-    {
-        ofNoFill();
-        ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (tempoLineUp.bSizeOver)
-        {
-            ofFill();
-        }
-        else
-        {
-            ofNoFill();
-        }
-    }
-    else
-    {
-        ofSetColor(ofColor::fromHsb(0,0,255,40));
-        if (tempoLineUp.bSizeOver)
-        {
-            ofFill();
-        }
-        else
-        {
-            ofNoFill();
-        }
-    }
-    ofRect(tempoLineUp.sizeRectPos, 7, 7);
-    
-    if (tempoLineUp.bOnOffBeingClick)
-    {
-        ofNoFill();
-        ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (tempoLineUp.bOnOffOver)
-        {
-            ofFill();
-        }
-        else
-        {
-            ofNoFill();
-        }
-    }
-    else
-    {
-        ofFill();
-        ofSetColor(ofColor::fromHsb(0,0,255,40));
-    }
-    ofRect(tempoLineUp.onOffRectPos, 7, 7);
-    ofLine(tempoLineUp.onOffRectPos+ofVec2f(4,0), tempoLineUp.sizeRectPos-ofVec2f(4,0));
-    ofPopStyle();
-    
+
+    drawingTempoLine(tempoLineUp.bOnOffBeingClick, tempoLineUp.bSizeOver, tempoLineUp.bOnOffOver, tempoLineUp.sizeRectPos, tempoLineUp.onOffRectPos);
+
+        
     ofPushStyle();
     for (int i = 0; i<nElementLine; i++)
     {
