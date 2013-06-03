@@ -119,5 +119,7 @@ public:
     vector<ofSoundPlayer> soundsList;
     
     int currentSound;
+    
+    void drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos);
 
 };
