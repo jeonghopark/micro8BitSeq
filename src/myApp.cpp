@@ -235,10 +235,10 @@ void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver,
     ofPopStyle();
 }
 
-void myApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
-{
-    
-}
+//void myApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
+//{
+//    
+//}
 
 //--------------------------------------------------------------
 void myApp::draw()
