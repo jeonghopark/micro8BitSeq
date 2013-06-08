@@ -9,7 +9,6 @@ void myApp::setup()
     ofBackground(ofColor::fromHsb(backgroundColorHue, 100, 200));
     ofSetWindowTitle("Micro 8Bit Sequencer");
     ofSetFrameRate(60);
-    ofSetRectMode(OF_RECTMODE_CENTER);
     ofEnableAlphaBlending();
     ofSetCircleResolution(24);
     
@@ -188,6 +187,7 @@ void myApp::update()
 void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos)
 {
     ofPushStyle();
+    ofSetRectMode(OF_RECTMODE_CENTER);
     ofSetColor(ofColor::fromHsb(0,0,255,140));
     
     if (_bTOnOff)
@@ -255,6 +255,8 @@ void myApp::draw()
     drawingTempoLine(tempoLineDown.bOnOffBeingClick, tempoLineDown.bSizeOver, tempoLineDown.bOnOffOver, tempoLineDown.sizeRectPos, tempoLineDown.onOffRectPos);
     
     ofPushStyle();
+    ofSetRectMode(OF_RECTMODE_CENTER);
+
     for (int i = 0; i<nElementLine; i++)
     {
         
@@ -355,6 +357,7 @@ void myApp::draw()
     
     
     ofPushStyle();
+    ofSetRectMode(OF_RECTMODE_CENTER);
     for (int i = 0; i<nElementLine; i++)
     {
         
@@ -455,32 +458,44 @@ void myApp::draw()
 void myApp::recordingLineDraw()
 {
     
-    if (soundRecordingDownOn)
+    
+    if (!tempoLineUp.bOnOffBeingClick&&tempoLineDown.bOnOffBeingClick)
     {
-        ofPushMatrix();
-        ofPushStyle();
-        ofSetColor(ofColor::fromHsb(backgroundColorHue, 150, 170));
-        ofTranslate(40, ofGetHeight()/2);
-        
+
         int recordingLinePosition = 10;
-        ofLine(0,recordingLinePosition,initialBufferSize/8-1,recordingLinePosition);
-        ofLine(0,-recordingLinePosition,initialBufferSize/8-1,-recordingLinePosition);
+
+        ofPushMatrix();
+
+        ofTranslate(40, ofGetHeight()*3/4);
         
+        ofPushStyle();
+        rectBlockAlphaFactor = rectBlockAlphaFactor + 3;
+        cout << sin(ofDegToRad(rectBlockAlphaFactor)) << endl;
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 110, 220, abs(sin(ofDegToRad(rectBlockAlphaFactor))*255) ));
+        ofRect(0,-25,initialBufferSize/8-1,50);
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 110, 240, abs(sin(ofDegToRad(rectBlockAlphaFactor))*255) ));
+//        ofLine(0,recordingLinePosition,initialBufferSize/8-1,recordingLinePosition);
+//        ofLine(0,-recordingLinePosition,initialBufferSize/8-1,-recordingLinePosition);
+        
+        ofLine(initialBufferSize/8-1,-25,tempoLineDown.onOffRectPos.x-40,tempoLineDown.onOffRectPos.y-ofGetHeight()*1/4+5);
+        ofPopStyle();
+                
         float oldValue;
 
-        
         for(int i = 0; i < initialBufferSize/8-1; i++)
         {
-            ofLine(i, buffer[i+1] * 50.0f, i+1, buffer[i+1] * -50.0f);
+            ofPushStyle();
+            ofSetColor(ofColor::fromHsb(backgroundColorHue, 150, 170));
+            ofLine(i, buffer[i+1] * 25, i+1, buffer[i+1] * -25);
+            ofPopStyle();
          
-            if ((buffer[i+1]*50.0f)>10)
+            if ((buffer[i+1]*50.0f)>recordingLinePosition/2)
             {
                 soundLevelTrigger = true;
                 startTime = ofGetElapsedTimeMillis();
             }
         }
-        
-        ofPopStyle();
+
         ofPopMatrix();
 
         
