@@ -38,6 +38,16 @@ typedef struct
     ofVec2f delayPos;
 	bool 	bDelayPosOver;
     bool    bDelayPosDragged;
+    
+    ofVec2f recBlockPos;
+    float rectBlockAlphaFactor;
+    int recordingTime;
+    int startTime;
+
+    WavFile myWavWriter;
+    int recordState=0;
+    bool bTimerReached;
+    int timeStamp;
 }
 controlTempoLine;
 
@@ -80,11 +90,9 @@ public:
     int bufferCounter;
 	float * buffer;
     
-    WavFile myWavWriter;
     ofSoundStream soundStream;
 	bool bIsRecording;
 	int channels;
-    int recordState=0;
     
     int nElementLine;
     controlElementLine elementLinesDown[8];
@@ -123,15 +131,11 @@ public:
     void drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos);
     
     bool soundRecordingDownOn;
-    bool soundLevelTrigger;
     bool recordTrigger;
-    int recordingTime;
-    int milis;
-    int startTime;
     
-    bool bTimerReached;
-    int timeStamp;
-    void recordingLineDraw();
+    void recordingLineDraw(ofVec2f _vP);
     
-    float rectBlockAlphaFactor;
+    
+    bool bDownSoundRecordOver;
+    bool bDownSoundRecordclick;
 };
