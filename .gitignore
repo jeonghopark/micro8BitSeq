@@ -37,3 +37,5 @@ addons/*
 
 # document files
 !*.md
+test.wav
+recording.wav
