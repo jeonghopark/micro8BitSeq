@@ -39,3 +39,5 @@ addons/*
 !*.md
 test.wav
 recording.wav
+bin/data/sounds/recordingUp.wav
+bin/data/sounds/recordingDown.wav
