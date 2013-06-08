@@ -121,5 +121,15 @@ public:
     int currentSound;
     
     void drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos);
-
+    
+    bool soundRecordingDownOn;
+    bool soundLevelTrigger;
+    bool recordTrigger;
+    int recordingTime;
+    int milis;
+    int startTime;
+    
+    bool bTimerReached;
+    int timeStamp;
+    void recordingLineDraw();
 };
