@@ -52,10 +52,10 @@ void myApp::setup()
 	currentSound = 0;
     
     
+    //    string fileNameUp = "sounds/samples/" + dir.getName(round(ofRandom(0,dir.size())));
     string fileNameDown = "sounds/samples/" + dir.getName(round(ofRandom(0,dir.size())));
-    string fileNameUp = "sounds/samples/" + dir.getName(round(ofRandom(0,dir.size())));
+    //    fileNameUp = "sounds/samples/tap_02.wav";
     fileNameDown = "sounds/samples/tap_01.wav";
-    fileNameUp = "sounds/samples/tap_02.wav";
     highVolume = 0.45;
     
     nElementLine = 8;
@@ -101,6 +101,11 @@ void myApp::setup()
     bangUp = false;
     bangDown = false;
     
+    soundRecordingDownOn = true;
+    
+    startTime = ofGetElapsedTimeMillis() - 1000;
+    bTimerReached = true;
+    
 }
 
 //--------------------------------------------------------------
@@ -139,7 +144,7 @@ void myApp::update()
             {
                 elementLinesDown[i].onOffTrigger = false;
             }
-        
+            
             if (_index==((i*4)+delayTempoLineUp))
             {
                 if ((elementLinesUp[i].soundTrigger)&&tempoLineUp.bOnOffBeingClick)
@@ -154,7 +159,7 @@ void myApp::update()
                 elementLinesUp[i].onOffTrigger = false;
             }
         }
-
+        
         millisDown = ofGetElapsedTimeMillis();
         
     }
@@ -237,7 +242,7 @@ void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver,
 
 //void myApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
 //{
-//    
+//
 //}
 
 //--------------------------------------------------------------
@@ -345,10 +350,10 @@ void myApp::draw()
     
     ofPushMatrix();
     ofTranslate(0, ofGetHeight()/2-5);
-
+    
     drawingTempoLine(tempoLineUp.bOnOffBeingClick, tempoLineUp.bSizeOver, tempoLineUp.bOnOffOver, tempoLineUp.sizeRectPos, tempoLineUp.onOffRectPos);
-
-        
+    
+    
     ofPushStyle();
     for (int i = 0; i<nElementLine; i++)
     {
@@ -439,20 +444,70 @@ void myApp::draw()
         
     }
     ofPopStyle();
-    
-    
     ofPopMatrix();
     
     
-    ofSetColor(ofColor::fromHsb(backgroundColorHue, 100, 220));
-	for(int i = 0; i < initialBufferSize-1; i++)
-    {
-        ofLine(i+(ofGetWidth()/2-initialBufferSize/2), ofGetHeight(), i+1+(ofGetWidth()/2-initialBufferSize/2), ofGetHeight() + buffer[i+1] * 100.0f);
-	}
-    
+    recordingLineDraw();
     
 }
 
+
+void myApp::recordingLineDraw()
+{
+    
+    if (soundRecordingDownOn)
+    {
+        ofPushMatrix();
+        ofPushStyle();
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 150, 170));
+        ofTranslate(40, ofGetHeight()/2);
+        
+        int recordingLinePosition = 10;
+        ofLine(0,recordingLinePosition,initialBufferSize/8-1,recordingLinePosition);
+        ofLine(0,-recordingLinePosition,initialBufferSize/8-1,-recordingLinePosition);
+        
+        float oldValue;
+
+        
+        for(int i = 0; i < initialBufferSize/8-1; i++)
+        {
+            ofLine(i, buffer[i+1] * 50.0f, i+1, buffer[i+1] * -50.0f);
+         
+            if ((buffer[i+1]*50.0f)>10)
+            {
+                soundLevelTrigger = true;
+                startTime = ofGetElapsedTimeMillis();
+            }
+        }
+        
+        ofPopStyle();
+        ofPopMatrix();
+
+        
+        recordingTime = 1000;
+        timeStamp = ofGetElapsedTimeMillis() - startTime;
+        
+        if ((timeStamp<recordingTime))
+        {
+            if (recordState==0)
+            {
+                recordState=1;
+            }
+            bTimerReached = false;
+        }
+        
+        if ((timeStamp>=recordingTime)&&!bTimerReached)
+        {
+            if (recordState==3)
+            {
+                recordState=2;
+            }
+            bTimerReached = true;
+        }
+        
+    }
+    
+}
 
 //--------------------------------------------------------------
 void myApp::audioIn(float * input, int bufferSize, int nChannels){
@@ -470,7 +525,7 @@ void myApp::audioIn(float * input, int bufferSize, int nChannels){
 	}
 	bufferCounter++;
     
-    if (recordState==1)
+    if ((recordState==1)&&(soundRecordingDownOn))
     {
         recordState=3;
         myWavWriter.open(ofToDataPath("sounds/recording.wav"), WAVFILE_WRITE);
@@ -485,6 +540,11 @@ void myApp::audioIn(float * input, int bufferSize, int nChannels){
     {
         myWavWriter.close();
         recordState=0;
+        for (int i = 0; i<nElementLine; i++)
+        {
+            elementLinesDown[i].samplePlay.loadSound("sounds/recording.wav");
+        }
+
     }
     
 }
@@ -493,25 +553,19 @@ void myApp::audioIn(float * input, int bufferSize, int nChannels){
 //--------------------------------------------------------------
 void myApp::keyPressed(int key)
 {
-    if (recordState==0)
-    {
-        recordState=1;
-    }
+//    if (recordState==0)
+//    {
+//        recordState=1;
+//    }
 }
 
 //--------------------------------------------------------------
 void myApp::keyReleased(int key)
 {
-    if (recordState==3)
-    {
-        recordState=2;
-    }
-    
-    for (int i = 0; i<nElementLine; i++)
-    {
-        elementLinesDown[i].samplePlay.loadSound("sounds/recording.wav");
-    }
-    
+//    if (recordState==3)
+//    {
+//        recordState=2;
+//    }
 }
 
 
