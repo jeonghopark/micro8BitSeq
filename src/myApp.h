@@ -48,6 +48,9 @@ typedef struct
     int recordState=0;
     bool bTimerReached;
     int timeStamp;
+    
+    ofVec2f bDownSoundRecordPos;
+    bool bDownSoundRecordClick;
 }
 controlTempoLine;
 
@@ -136,6 +139,5 @@ public:
     void recordingLineDraw(ofVec2f _vP);
     
     
-    bool bDownSoundRecordOver;
-    bool bDownSoundRecordclick;
+
 };

@@ -32,6 +32,7 @@ void myApp::setup()
     tempoLineDown.myWavWriter.setFormat(1, sampleRate, 16);
     tempoLineDown.recordState=0;
     tempoLineDown.bTimerReached = true;
+    tempoLineDown.bDownSoundRecordClick = true;
     
     tempoLineUp.length = 512;
     tempoLineUp.onOffRectPos.x = -tempoLineUp.length/2 + ofGetWidth()/2;
@@ -42,6 +43,8 @@ void myApp::setup()
     tempoLineUp.startTime = ofGetElapsedTimeMillis() - 1000;
     tempoLineUp.myWavWriter.setFormat(1, sampleRate, 16);
     tempoLineUp.recordState=0;
+    tempoLineUp.bTimerReached = true;
+    tempoLineUp.bDownSoundRecordClick = true;
     
     tempoLineUp.position.x = tempoLineUp.sizeRectPos.x-tempoLineDown.sizeRectPos.x;
     tempoLineUp.delayPos.x = tempoLineUp.length/2 + ofGetWidth()/2 - tempoLineUp.length/(10*2);
@@ -462,6 +465,19 @@ void myApp::draw()
     {
         recordingLineDraw(tempoLineUp.recBlockPos);
     }
+    
+    if ((!tempoLineUp.bOnOffBeingClick&&!tempoLineUp.bDownSoundRecordClick)||tempoLineDown.bOnOffBeingClick)
+    {
+        tempoLineUp.bDownSoundRecordClick = true;
+    }
+    if ((!tempoLineDown.bOnOffBeingClick&&!tempoLineDown.bDownSoundRecordClick)||tempoLineUp.bOnOffBeingClick)
+    {
+        tempoLineDown.bDownSoundRecordClick = true;
+    }
+    
+    tempoLineDown.bDownSoundRecordPos = ofVec2f(tempoLineDown.recBlockPos.x,tempoLineDown.recBlockPos.y-(initialBufferSize/8-1)/2);
+    tempoLineUp.bDownSoundRecordPos = ofVec2f(tempoLineUp.recBlockPos.x,tempoLineUp.recBlockPos.y-(initialBufferSize/8-1)/2);
+    
 }
 
 
@@ -469,23 +485,44 @@ void myApp::recordingLineDraw(ofVec2f _vP)
 {
     
     ofPushMatrix();
-    
     ofTranslate(_vP);
-    
     ofPushStyle();
-    tempoLineDown.rectBlockAlphaFactor = tempoLineDown.rectBlockAlphaFactor + 2.5;
     
-    ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*90) ));
-    
-    ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
     
     if (_vP.y == ofGetHeight()*3/4)
     {
+        ofPushStyle();
+        if (tempoLineDown.bDownSoundRecordClick)
+        {
+            tempoLineDown.rectBlockAlphaFactor = tempoLineDown.rectBlockAlphaFactor + 2.5;
+        }
+        else
+        {
+            ofNoFill();
+            tempoLineDown.rectBlockAlphaFactor = 90;
+        }
+        
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*90) ));
+        ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         ofLine(initialBufferSize/8-1,-(initialBufferSize/8-1)/2,tempoLineDown.onOffRectPos.x-_vP.x-5,tempoLineDown.onOffRectPos.y-ofGetHeight()*1/4+5+3);
+        ofPopStyle();
     }
     else
     {
+        ofPushStyle();
+        if (tempoLineUp.bDownSoundRecordClick)
+        {
+            tempoLineUp.rectBlockAlphaFactor = tempoLineUp.rectBlockAlphaFactor + 2.5;
+        }
+        else
+        {
+            ofNoFill();
+            tempoLineUp.rectBlockAlphaFactor = 90;
+        }
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*90) ));
+        ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         ofLine(initialBufferSize/8-1,(initialBufferSize/8-1)/2,tempoLineUp.onOffRectPos.x-_vP.x-5,tempoLineUp.onOffRectPos.y+ofGetHeight()*1/4-5-3);
+        ofPopStyle();
     }
     ofPopStyle();
     
@@ -498,9 +535,12 @@ void myApp::recordingLineDraw(ofVec2f _vP)
         ofLine(i, buffer[i+1] * (initialBufferSize/8-1)/2, i+1, buffer[i+1] * -(initialBufferSize/8-1));
         ofPopStyle();
         
-        if (abs(buffer[i+1]*50.0f)>5)
+        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineDown.bDownSoundRecordClick)
         {
             tempoLineDown.startTime = ofGetElapsedTimeMillis();
+        }
+        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineUp.bDownSoundRecordClick)
+        {
             tempoLineUp.startTime = ofGetElapsedTimeMillis();
         }
     }
@@ -528,6 +568,7 @@ void myApp::recordingLineDraw(ofVec2f _vP)
                 tempoLineDown.recordState=2;
             }
             tempoLineDown.bTimerReached = true;
+            tempoLineDown.bDownSoundRecordClick = true;
         }
     }
     else
@@ -551,6 +592,7 @@ void myApp::recordingLineDraw(ofVec2f _vP)
                 tempoLineUp.recordState=2;
             }
             tempoLineUp.bTimerReached = true;
+            tempoLineUp.bDownSoundRecordClick = true;
         }
     }
     
@@ -752,6 +794,9 @@ void myApp::mousePressed(int x, int y, int button)
     tempoLineDown.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
     tempoLineUp.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2+5, tempoLineUp.onOffRectPos, 7, tempoLineUp.bOnOffBeingClick);
     tempoLineUp.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2+5, tempoLineUp.sizeRectPos, 7);
+    
+    tempoLineDown.bDownSoundRecordClick = onOffOut(x, y, tempoLineDown.bDownSoundRecordPos+ofVec2f(initialBufferSize/8/2,initialBufferSize/8/2+1), initialBufferSize/8/2, tempoLineDown.bDownSoundRecordClick);
+    tempoLineUp.bDownSoundRecordClick = onOffOut(x, y, tempoLineUp.bDownSoundRecordPos+ofVec2f(initialBufferSize/8/2,initialBufferSize/8/2+1), initialBufferSize/8/2, tempoLineUp.bDownSoundRecordClick);
     
     for (int i = 0; i < nElementLine; i++)
     {
