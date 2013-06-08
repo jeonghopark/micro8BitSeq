@@ -132,4 +132,6 @@ public:
     bool bTimerReached;
     int timeStamp;
     void recordingLineDraw();
+    
+    float rectBlockAlphaFactor;
 };
