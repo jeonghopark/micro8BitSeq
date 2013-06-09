@@ -51,6 +51,13 @@ typedef struct
     
     ofVec2f bDownSoundRecordPos;
     bool bDownSoundRecordClick;
+    float soundVolume;
+    
+    ofVec2f changeSamplePos;
+    bool bChangeSampleClick;
+    bool bChangeSampleOver;
+    int changeSampleIndex;
+    
 }
 controlTempoLine;
 
@@ -119,7 +126,7 @@ public:
     int triggerCounterUp;
     int triggerCounterDown;
     
-    int millisUp;
+    int startTime;
     int millisDown;
     bool bangUp;
     bool bangDown;
@@ -138,6 +145,7 @@ public:
     
     void recordingLineDraw(ofVec2f _vP);
     
+    void infomationWindow();
     
-
+    
 };
