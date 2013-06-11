@@ -34,7 +34,7 @@ void myApp::setup()
     tempoLineDown.bTimerReached = true;
     tempoLineDown.bDownSoundRecordClick = true;
     tempoLineDown.soundVolume = 1;
-    tempoLineDown.changeSamplePos = ofVec2f(ofGetWidth()-30,ofGetHeight()/2+30);
+    tempoLineDown.changeSamplePos = ofVec2f(ofGetWidth()-30,ofGetHeight()/2+50);
     tempoLineDown.bChangeSampleClick = false;
     tempoLineDown.bChangeSampleOver = false;
     tempoLineDown.changeSampleIndex = 0;
@@ -52,7 +52,7 @@ void myApp::setup()
     tempoLineUp.bTimerReached = true;
     tempoLineUp.bDownSoundRecordClick = true;
     tempoLineUp.soundVolume = 1;
-    tempoLineUp.changeSamplePos = ofVec2f(ofGetWidth()-30,ofGetHeight()/2-30);
+    tempoLineUp.changeSamplePos = ofVec2f(ofGetWidth()-30,ofGetHeight()/2-50);
     tempoLineUp.bChangeSampleClick = false;
     tempoLineUp.bChangeSampleOver = false;
     tempoLineUp.changeSampleIndex = 0;
@@ -72,7 +72,7 @@ void myApp::setup()
 	currentSound = 0;
     
     
-
+    
     fileNameUp = "sounds/samples/tap_02.wav";
     fileNameDown = "sounds/samples/tap_01.wav";
     highVolume = 0.75;
@@ -511,7 +511,11 @@ void myApp::draw()
         {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 100) );
         }
-        ofRect(ofGetWidth()-60, ofGetHeight()/2-60, 60, 60);
+        ofRect(tempoLineUp.changeSamplePos.x-30, tempoLineUp.changeSamplePos.y-30, 60, 60);
+        ofNoFill();
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 120) );
+        ofRect(tempoLineUp.changeSamplePos.x-30, tempoLineUp.changeSamplePos.y-30, 60, 60);
+        ofLine(tempoLineUp.changeSamplePos.x-30,tempoLineUp.changeSamplePos.y+30,tempoLineUp.sizeRectPos.x+3,tempoLineUp.sizeRectPos.y+ofGetHeight()/2-7);
         ofPopStyle();
         
     }
@@ -534,9 +538,12 @@ void myApp::draw()
         {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 100) );
         }
-        ofRect(ofGetWidth()-60, ofGetHeight()/2, 60, 60);
+        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
+        ofNoFill();
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 120) );
+        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
+        ofLine(tempoLineDown.changeSamplePos.x-30,tempoLineDown.changeSamplePos.y-30,tempoLineDown.sizeRectPos.x+3,tempoLineDown.sizeRectPos.y+ofGetHeight()/2+7);
         ofPopStyle();
-        //    string fileNameDown = "sounds/samples/" + dir.getName(round(ofRandom(0,dir.size())));
     }
     ofPopStyle();
     
@@ -548,16 +555,11 @@ void myApp::draw()
 void myApp::infomationWindow()
 {
     ofPushStyle();
-    if((ofGetElapsedTimeMillis()-startTime)<=3000)
-    {
-        ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, ofMap(ofGetElapsedTimeMillis(),0,3000,0,230), ofMap(ofGetElapsedTimeMillis(),0,3000,255,12) ) );
-        ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    }
-    else if ((ofGetElapsedTimeMillis()-startTime)>3000&&(ofGetElapsedTimeMillis()-startTime)<3500)
-    {
-        ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 230, 0 ) );
-        ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    }
+    startTime = startTime + 1;
+    cout << startTime << endl;
+    if (startTime>300) startTime = 301;
+    ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, ofMap(startTime,0,300,0,230), ofMap(startTime,0,300,255,0) ) );
+    ofRect(0, 0, ofGetWidth(), ofGetHeight());
     ofPopStyle();
     
 }
@@ -595,6 +597,8 @@ void myApp::recordingLineDraw(ofVec2f _vP)
         }
         
         ofLine(initialBufferSize/8-1,-(initialBufferSize/8-1)/2,tempoLineDown.onOffRectPos.x-_vP.x-5,tempoLineDown.onOffRectPos.y-ofGetHeight()*1/4+5+3);
+        
+        
         ofPopStyle();
     }
     else
@@ -632,7 +636,8 @@ void myApp::recordingLineDraw(ofVec2f _vP)
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 220, 150));
         
         ofLine(i, buffer[i] * (initialBufferSize/8-1)/3, i+1, buffer[i+1] * -(initialBufferSize/8-1)/3);
-        
+//        ofEllipse(i, 0, buffer[i] * (initialBufferSize/8-1)/3, buffer[i] * (initialBufferSize/8-1)/2);
+
         ofPopStyle();
         
         if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineDown.bDownSoundRecordClick)
@@ -927,9 +932,9 @@ void myApp::mouseReleased(int x, int y, int button)
 {
     tempoLineDown.bChangeSampleClick = onOffOut(x, y, tempoLineDown.changeSamplePos, 30, tempoLineDown.bChangeSampleClick);
     tempoLineUp.bChangeSampleClick = onOffOut(x, y, tempoLineUp.changeSamplePos, 30, tempoLineUp.bChangeSampleClick);
-//    if(inOutCal(x, y, tempoLineDown.changeSamplePos, 30)) tempoLineDown.bChangeSampleClick = false;
-//    if(inOutCal(x, y, tempoLineUp.changeSamplePos, 30)) tempoLineUp.bChangeSampleClick = false;
-
+    //    if(inOutCal(x, y, tempoLineDown.changeSamplePos, 30)) tempoLineDown.bChangeSampleClick = false;
+    //    if(inOutCal(x, y, tempoLineUp.changeSamplePos, 30)) tempoLineUp.bChangeSampleClick = false;
+    
 }
 
 //--------------------------------------------------------------
