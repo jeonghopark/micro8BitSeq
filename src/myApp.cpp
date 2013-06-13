@@ -4,9 +4,9 @@
 //--------------------------------------------------------------
 void myApp::setup()
 {
-    //    ofSetDataPathRoot("../Resources/");
+    ofSetDataPathRoot("../Resources/");
     backgroundColorHue = ofRandom(0,255);
-    ofBackground(ofColor::fromHsb(backgroundColorHue, 100, 200));
+    ofBackground(ofColor::fromHsb(backgroundColorHue, 150, 180));
     
     ofSetWindowTitle("Micro 8Bit Sequencer");
     ofEnableAlphaBlending();
@@ -22,7 +22,7 @@ void myApp::setup()
 	ofSoundStreamSetup(0, 1, this, sampleRate, initialBufferSize, 4);
 	ofSetFrameRate(64);
     
-    tempoLineDown.length = 512;
+    tempoLineDown.length = ofGetWidth()*2/4;
     tempoLineDown.onOffRectPos.x = -tempoLineDown.length/2 + ofGetWidth()/2;
     tempoLineDown.sizeRectPos.x = tempoLineDown.length/2 + ofGetWidth()/2;
     tempoLineDown.bOnOffBeingClick = true;
@@ -40,7 +40,7 @@ void myApp::setup()
     tempoLineDown.changeSampleIndex = 0;
     
     
-    tempoLineUp.length = 512;
+    tempoLineUp.length = ofGetWidth()*2/4;
     tempoLineUp.onOffRectPos.x = -tempoLineUp.length/2 + ofGetWidth()/2;
     tempoLineUp.sizeRectPos.x = tempoLineUp.length/2 + ofGetWidth()/2;
     tempoLineUp.bOnOffBeingClick = true;
@@ -122,34 +122,47 @@ void myApp::setup()
     
     soundRecordingDownOn = true;
     
+    cout << tempoLineDown.sizeRectPos << endl;
+    cout << tempoLineDown.onOffRectPos << endl;
+    
+    fullscreen = false;
     
 }
 
 //--------------------------------------------------------------
 void myApp::update()
 {
-    ofSetWindowShape(850, 400);
+//    ofSetWindowShape(850, 400);
     
     ofSoundUpdate();
     
-    tempoLineDown.sizeRectPos.x = tempoLineDown.sizeRectPos.x;
-    tempoLineDown.onOffRectPos.x = ofGetWidth() - tempoLineDown.sizeRectPos.x;
+//    tempoLineDown.sizeRectPos.x = tempoLineDown.sizeRectPos.x;
+//    tempoLineDown.onOffRectPos.x = ofGetWidth() - tempoLineDown.sizeRectPos.x;
+
     tempoLineDown.length = tempoLineDown.sizeRectPos.x - tempoLineDown.onOffRectPos.x;
     
-    float speed = ofMap(tempoLineDown.length, 40, ofGetWidth(), 14, 70);
-    float timer = (ofGetElapsedTimeMillis()-millisDown)*1.9;
+    tempoLineDown.onOffRectPos.x = -tempoLineDown.length/2 + ofGetWidth()/2;
+    tempoLineDown.sizeRectPos.x = tempoLineDown.length/2 + ofGetWidth()/2;
+    
+    
+//    float speed = ofMap(tempoLineDown.length, 40, ofGetWidth(), 10, 88);
+    float speed = tempoLineDown.length/32;
+    float timer = (ofGetElapsedTimeMillis()-millisDown)*1.0;
     
     int delayTempoLineUp = (int)(tempoLineUp.position.x)/12;
     
+
+    int speedFactor = 32;
+    int speedFactor8th = speedFactor/8;
     
     if (timer>=speed)
     {
         triggerCounterDown++;
-        int _index = triggerCounterDown%32;
+        int _index = triggerCounterDown%speedFactor;
         for (int i = 0; i<nElementLine; i++)
         {
             
-            if (_index==((i*4)))
+            if (_index==((i*speedFactor8th)))
             {
                 if ((elementLinesDown[i].soundTrigger)&&tempoLineDown.bOnOffBeingClick)
                 {
@@ -164,14 +177,14 @@ void myApp::update()
                 elementLinesDown[i].onOffTrigger = false;
             }
             
-            if (_index==((i*4)+delayTempoLineUp))
+            if (_index==((i*speedFactor8th)+delayTempoLineUp))
             {
                 if ((elementLinesUp[i].soundTrigger)&&tempoLineUp.bOnOffBeingClick)
                 {
                     elementLinesUp[i].onOffTrigger = true;
                     elementLinesUp[i].samplePlay.play();
                     elementLinesUp[i].samplePlay.setVolume( ofRandom(0.325,0.95) * tempoLineUp.soundVolume);
-                    elementLinesUp[i].samplePlay.setSpeed( ofMap(elementLinesUp[i].sizeRect.y+200, ofGetHeight()/2, 0, 3.0, 0) * ofRandom(0.75,1.25) );
+                    elementLinesUp[i].samplePlay.setSpeed( ofMap(elementLinesUp[i].sizeRect.y+ofGetHeight()/2, ofGetHeight()/2, 0, 3.0, 0) * ofRandom(0.75,1.25) );
                 }
             }
             else
@@ -192,6 +205,9 @@ void myApp::update()
     tempoLineUp.onOffRectPos.x = tempoLineDown.onOffRectPos.x + spacingLineUp * delayTempoLineUp * 0.25;
     tempoLineUp.length = tempoLineUp.sizeRectPos.x - tempoLineUp.onOffRectPos.x;
     
+    cout << tempoLineUp.position.x << endl;
+    cout << delayTempoLineUp << endl;
+
     
     for (int i = 0; i<nElementLine; i++)
     {
@@ -272,6 +288,7 @@ void myApp::draw()
     
     ofPushMatrix();
     ofTranslate(0, ofGetHeight()/2+5);
+    
     
     drawingTempoLine(tempoLineDown.bOnOffBeingClick, tempoLineDown.bSizeOver, tempoLineDown.bOnOffOver, tempoLineDown.sizeRectPos, tempoLineDown.onOffRectPos);
     
@@ -499,7 +516,6 @@ void myApp::draw()
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 160) );
             tempoLineUp.changeSampleIndex++;
             tempoLineUp.changeSampleIndex = tempoLineUp.changeSampleIndex%dir.size();
-            cout << tempoLineUp.changeSampleIndex << endl;
             for (int i = 0; i<nElementLine; i++)
             {
                 string fileNameUp = "sounds/samples/" + dir.getName(tempoLineUp.changeSampleIndex);
@@ -527,7 +543,6 @@ void myApp::draw()
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 160) );
             tempoLineDown.changeSampleIndex++;
             tempoLineDown.changeSampleIndex = tempoLineDown.changeSampleIndex%dir.size();
-            cout << tempoLineDown.changeSampleIndex << endl;
             for (int i = 0; i<nElementLine; i++)
             {
                 string fileNameDown = "sounds/samples/" + dir.getName(tempoLineDown.changeSampleIndex);
@@ -548,7 +563,8 @@ void myApp::draw()
     ofPopStyle();
     
     infomationWindow();
-    
+    ofSetFullscreen(fullscreen);
+
 }
 
 
@@ -556,7 +572,6 @@ void myApp::infomationWindow()
 {
     ofPushStyle();
     startTime = startTime + 1;
-    cout << startTime << endl;
     if (startTime>300) startTime = 301;
     ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, ofMap(startTime,0,300,0,230), ofMap(startTime,0,300,255,0) ) );
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
@@ -780,6 +795,9 @@ void myApp::keyReleased(int key)
     //    {
     //        recordState=2;
     //    }
+    
+    if (key=='f') fullscreen = !fullscreen;
+    
 }
 
 
@@ -886,10 +904,9 @@ void myApp::mouseDragged(int x, int y, int button)
     
     if (tempoLineUp.bSizeBeingDragged == true)
     {
-        tempoLineUp.position.x = x - (tempoLineDown.length+ofGetWidth())/2;
+        tempoLineUp.position.x = x - (tempoLineUp.length/2+ofGetWidth()/2);
         if (tempoLineUp.position.x>49) tempoLineUp.position.x = 49;
-        if (tempoLineUp.position.x<-49) tempoLineUp.position.x = -49;
-        
+        if (tempoLineUp.position.x<-49) tempoLineUp.position.x = -49;        
     }
     
 }
