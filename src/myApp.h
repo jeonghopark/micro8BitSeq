@@ -147,5 +147,5 @@ public:
     
     void infomationWindow();
     
-    
+    bool fullscreen;
 };
