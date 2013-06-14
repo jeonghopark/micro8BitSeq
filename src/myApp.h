@@ -54,6 +54,7 @@ typedef struct
     float soundVolume;
     
     ofVec2f changeSamplePos;
+    float changeSampleSize;
     bool bChangeSampleClick;
     bool bChangeSampleOver;
     int changeSampleIndex;
@@ -148,4 +149,8 @@ public:
     void infomationWindow();
     
     bool fullscreen;
+    
+    
+    float randomY[16];
+    
 };
