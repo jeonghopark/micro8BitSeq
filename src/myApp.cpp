@@ -20,7 +20,7 @@ void myApp::setup()
 	memset(buffer, 0, initialBufferSize * sizeof(float));
     
 	ofSoundStreamSetup(0, 1, this, sampleRate, initialBufferSize, 4);
-	ofSetFrameRate(128);
+	ofSetFrameRate(60);
     
     
     dir.listDir("sounds/samples/");
@@ -542,9 +542,9 @@ void myApp::draw()
         }
         ofRect(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
         ofNoFill();
-        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 120) );
-        ofRect(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
-        ofLine(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2,tempoLineUp.changeSamplePos.y+tempoLineUp.changeSampleSize/2,tempoLineUp.sizeRectPos.x+3,tempoLineUp.sizeRectPos.y+ofGetHeight()/2-7);
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 80) );
+//        ofRect(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
+        ofLine(tempoLineUp.changeSamplePos.x+tempoLineUp.changeSampleSize/2,tempoLineUp.changeSamplePos.y+tempoLineUp.changeSampleSize/2,tempoLineUp.sizeRectPos.x+3,tempoLineUp.sizeRectPos.y+ofGetHeight()/2-7);
         ofPopStyle();
         
     }
@@ -568,9 +568,9 @@ void myApp::draw()
         }
         ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
         ofNoFill();
-        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 120) );
-        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
-        ofLine(tempoLineDown.changeSamplePos.x-30,tempoLineDown.changeSamplePos.y-30,tempoLineDown.sizeRectPos.x+3,tempoLineDown.sizeRectPos.y+ofGetHeight()/2+7);
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 80) );
+//        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
+        ofLine(tempoLineDown.changeSamplePos.x+30,tempoLineDown.changeSamplePos.y-30,tempoLineDown.sizeRectPos.x+3,tempoLineDown.sizeRectPos.y+ofGetHeight()/2+7);
         ofPopStyle();
     }
     ofPopStyle();
@@ -612,19 +612,19 @@ void myApp::recordingLineDraw(ofVec2f _vP)
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.5) ));
             ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
             ofNoFill();
-            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
         else
         {
             tempoLineDown.rectBlockAlphaFactor = colorAlpha;
             tempoLineDown.soundVolume = 0;
-            ofNoFill();
-            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.6) ));
+            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.2) ));
             ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
-        
+        ofPushStyle();
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.3) ));
         ofLine( 0,-(initialBufferSize/8-1)/2,tempoLineDown.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y+5+3 );
+        ofPopStyle();
+        
         ofPopStyle();
     }
     else
@@ -638,18 +638,18 @@ void myApp::recordingLineDraw(ofVec2f _vP)
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.5) ));
             ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
             ofNoFill();
-            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
         else
         {
             tempoLineUp.rectBlockAlphaFactor = colorAlpha;
             tempoLineUp.soundVolume = 0;
-            ofNoFill();
-            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.6) ));
+            ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.2) ));
             ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
+        ofPushStyle();
+        ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.3) ));
         ofLine( 0,(initialBufferSize/8-1)/2,tempoLineUp.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y-5-3 );
+        ofPopStyle();
         ofPopStyle();
     }
     ofPopStyle();
