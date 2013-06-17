@@ -8,7 +8,7 @@ void myApp::setup()
     backgroundColorHue = ofRandom(0,255);
     ofBackground(ofColor::fromHsb(backgroundColorHue, 150, 180));
     
-    ofSetWindowTitle("Micro 8Bit Sequencer");
+    ofSetWindowTitle("micro 8Bit sequencer");
     ofEnableAlphaBlending();
     ofSetCircleResolution(24);
     
@@ -20,7 +20,7 @@ void myApp::setup()
 	memset(buffer, 0, initialBufferSize * sizeof(float));
     
 	ofSoundStreamSetup(0, 1, this, sampleRate, initialBufferSize, 4);
-	ofSetFrameRate(60);
+	ofSetFrameRate(120);
     
     
     dir.listDir("sounds/samples/");
@@ -156,7 +156,7 @@ void myApp::update()
     
     
     //    float speed = ofMap(tempoLineDown.length, 40, ofGetWidth(), 10, 88);
-    float speed = tempoLineDown.length/16;
+    float speed = tempoLineDown.length/12;
     float timer = (ofGetElapsedTimeMillis()-millisDown)*1.0;
     
     int delayTempoLineUp = (int)(tempoLineUp.position.x)/12;
@@ -908,8 +908,8 @@ void myApp::mouseDragged(int x, int y, int button)
     {
         if (x<ofGetWidth()/2+ofGetWidth()*0.07)
             x = ofGetWidth()/2+ofGetWidth()*0.07;
-        if (x>ofGetWidth()-ofGetWidth()*0.1)
-            x = ofGetWidth()-ofGetWidth()*0.1;
+        if (x>ofGetWidth()-ofGetWidth()*0.11)
+            x = ofGetWidth()-ofGetWidth()*0.11;
         tempoLineDown.sizeRectPos.x = x;
     }
     
