@@ -119,7 +119,7 @@ void myApp::setup()
         elementLinesUp[i].samplePlay.setVolume(highVolume);
         spacingLineUp = tempoLineUp.length / 10;
         elementLinesUp[i].position = ofVec2f(spacingLineUp + spacingLineUp/2 + spacingLineUp*i, tempoLineUp.onOffRectPos.y);
-        elementLinesUp[i].sizeRect = ofVec2f(elementLinesUp[i].position.x, elementLinesUp[i].position.y-randomY[i]);
+        elementLinesUp[i].sizeRect = ofVec2f(elementLinesUp[i].position.x, elementLinesUp[i].position.y-randomY[i+8]);
         elementLinesUp[i].onOffRect = elementLinesUp[i].sizeRect * ofVec2f(1,-1) + ofVec2f(0,ofGetHeight());
 		elementLinesUp[i].width = 4;
         elementLinesUp[i].triggerColor = 120;
