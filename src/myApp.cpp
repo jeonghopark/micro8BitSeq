@@ -55,7 +55,7 @@ void myApp::setup()
         randomY[i] = ofRandom(20,ofGetHeight()*2/5);
     }
     
-    tempoLineDown.length = ofGetWidth()*2/4;
+    tempoLineDown.length = ofGetWidth()*3/8;
     tempoLineDown.bOnOffBeingClick = true;
     tempoLineDown.bTimerReached = true;
     tempoLineDown.bDownSoundRecordClick = true;
@@ -71,7 +71,7 @@ void myApp::setup()
     tempoLineDown.sizeRectPos.x = tempoLineDown.length/2 + ofGetWidth()/2;
     tempoLineDown.changeSampleSize = 60;
     
-    tempoLineUp.length = ofGetWidth()*2/4;
+    tempoLineUp.length = tempoLineDown.length;
     tempoLineUp.bOnOffBeingClick = true;
     tempoLineUp.bTimerReached = true;
     tempoLineUp.bDownSoundRecordClick = true;
