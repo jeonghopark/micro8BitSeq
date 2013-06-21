@@ -44,3 +44,9 @@ recordingDown.wav
 bin/data/sounds/recordingUp.wav
 bin/data/sounds/recordingDown.wav
 
+emptyExample.cbp
+emptyExample.depend
+emptyExample.layout
+emptyExample.workspace
+obj/release/src/main.o
+obj/release/src/myApp.o
