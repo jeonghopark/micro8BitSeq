@@ -2,9 +2,9 @@
  * WavFile.h
  *
  * Marek Bereza 2011
- * 
+ *
  * Originally stolen from somewhere.
- * 
+ *
  * Version 5
  */
 #include <stdio.h>
@@ -24,12 +24,12 @@ using namespace std;
 
 class WavFile {
 private:
-	
+
 	fstream *file;
 protected:
-	int length;	
+	int length;
 public:
-	
+
 	int getLength() {
 		return length/channels;
 	}
@@ -39,13 +39,13 @@ public:
 	int bitsPerSample;
 	short format;
 	int ioMode;
-	
+
 	void setFormat(int _channels, int _samplerate, int _bitsPerSample) {
 		channels = _channels;
 		samplerate = _samplerate;
 		bitsPerSample = _bitsPerSample;
 	}
-	
+
 	WavFile() {
 		channels = 1;
 		samplerate = 44100;
@@ -55,23 +55,23 @@ public:
 		length = 0;
 		ioMode = WAVFILE_READ;
 	}
-	
-	
+
+
 	~WavFile() {
 		close();
 		unload();
 	}
-	
-	
+
+
 	bool open(string path, int RW) {
 		close();
 		ioMode = RW;
 		if(RW==WAVFILE_WRITE) {
-			
-			
+
+
 			close();
 			file = new fstream(path.c_str(), ios::out | ios::binary);
-			
+
 			writeFormat();
 			return true;
 		} else {
@@ -84,8 +84,8 @@ public:
 			//return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * This interleaves samples for putting into wav files.
 	 * Give it 2-dim float array (input) and a 1-dim float array (output)
@@ -96,21 +96,21 @@ public:
 			out[i*2 + 0] = in[0][i];
 			out[i*2 + 1] = in[1][i];
 		}
-		
+
 	}
-	
+
 	void writeFormat() {
-		cout<<"writeFormat()"<<endl;
+//		cout<<"writeFormat()"<<endl;
 		format = 1;
-		
+
 		int mySubChunk1Size = 16;
 		int myByteRate = samplerate * channels * bitsPerSample/8;
 		short myBlockAlign = channels * bitsPerSample/8;
-		
+
 		int myChunkSize = 36 + length*bitsPerSample/8;
 		int myDataSize = length*bitsPerSample/8;
 		// write the wav file per the wav file format
-		file->seekp (0, ios::beg); 
+		file->seekp (0, ios::beg);
 		file->write ("RIFF", 4);
 		file->write ((char*) &myChunkSize, 4);
 		file->write ("WAVE", 4);
@@ -125,8 +125,8 @@ public:
 		file->write ("data", 4);
 		file->write ((char*) &myDataSize, 4);
 	}
-	
-	
+
+
 	/**
 	 * Buffer length is nnumber of samples.
 	 */
@@ -140,25 +140,25 @@ public:
 		length += buffLength;
 		return true;
 	}
-	
+
 	int read(float *samples, int buffLength) {
 		if(file==NULL) {
 			return 0;
 		}
-		
+
 		short buff[buffLength];
 		int itemsRead = file->read((char*)buff, buffLength*sizeof(short)).gcount();
 		itemsRead /= sizeof(short);
 		for(int i = 0; i < itemsRead; i++) {
 			samples[i] = ((float)buff[i])/32767.f;
 		}
-		
-		
+
+
 		return itemsRead;
 	}
-	
-	
-	
+
+
+
 	void close() {
 		if(file!=NULL) {
 			if(ioMode==WAVFILE_WRITE) {
@@ -169,16 +169,16 @@ public:
 			file = NULL;
 		}
 	}
-	
-	
+
+
 #define WRITE_BUFF_SIZE 256
 	// write out the wav file
 	bool save(string path) {
-		
+
 		if(data==NULL) return false;
-		
+
 		open(path.c_str(), WAVFILE_WRITE);
-		
+
 		short buff[WRITE_BUFF_SIZE];
 		int pos = 0;
 		while(pos<length) {
@@ -189,28 +189,28 @@ public:
 			}
 			file->write ((char*)buff, len*bitsPerSample/8);
 		}
-		
+
 		close();
 		return true;
 	}
-	
+
 	// this gives you data that you have to free yourself
 	float *getData() {
 		float *d = data;
 		data = NULL;
 		return d;
 	}
-	
-	// length is the length in samples, not frames 
+
+	// length is the length in samples, not frames
 	// - must give malloced memory
 	void setData(float *_data, int _length) {
 		data = _data;
 		length = _length;
 	}
-	
+
 	void readFormat() {
-		file->seekp (0, ios::beg); 
-		short myFormat,myBlockAlign;		
+		file->seekp (0, ios::beg);
+		short myFormat,myBlockAlign;
 		int mySubChunk1Size,myByteRate;
 		int myChunkSize,myDataSize;
 		format = 1;
@@ -224,14 +224,14 @@ public:
 		file->read( (char*) &myByteRate, sizeof(int) ); // read the byterate
 		file->read( (char*) &myBlockAlign, sizeof(short) ); // read the blockalign
 		file->read( (char*) &bitsPerSample, sizeof(short) ); // read the bitspersample
-		
+
 		file->seekg(40, ios::beg);
 		file->read( (char*) &length, sizeof(int) ); // read the size of the data
-		
+
 		printf("Reading format: l = %d\n", samplerate);
 		length /= sizeof(short);
-		
-		
+
+
 	}
 	/**
 	 * Reads an entire file into the data member of this class. It dynamically
@@ -239,7 +239,7 @@ public:
 	 * method again), so take care.
 	 */
 	bool load(string path) {
-		
+
 		printf("Path: %s\n", path.c_str());
 		if(file!=NULL) close();
 		file = new fstream(path.c_str(), ios::in | ios::binary);
@@ -247,13 +247,13 @@ public:
 		if(bitsPerSample!=16 || length<=0 || format!=1) {
 			return false;
 		}
-		
+
 		// read the data chunk
 		short *rawData = new short[length];
 		file->seekg(44, ios::beg);
 		file->read((char*)rawData, length*sizeof(short));
 		file->close(); // close the input file
-		
+
 		unload();
 		// bytes to shorts
 		data = new float[length];
@@ -262,9 +262,9 @@ public:
 			data[i] = ((float)rawData[i])/32767.f;
 		}
 		delete rawData;
-		
+
 		close();
-		
+
 		return true; // this should probably be something more descriptive
 	}
 	void unload() {
