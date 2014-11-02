@@ -169,9 +169,6 @@ void myApp::update()
     {
         millisDown = ofGetElapsedTimeMillis();
         
-        cout << timer << endl;
-        cout << speed << endl;
-        
         triggerCounterDown++;
         int _index = triggerCounterDown%speedFactor;
         for (int i = 0; i<nElementLine; i++)
@@ -515,7 +512,6 @@ void myApp::draw()
         tempoLineDown.bDownSoundRecordClick = true;
     }
     
-
     tempoLineDown.bDownSoundRecordPos = ofVec2f(tempoLineDown.recBlockPos.x,tempoLineDown.recBlockPos.y-(initialBufferSize/8-1)/2);
     tempoLineUp.bDownSoundRecordPos = ofVec2f(tempoLineUp.recBlockPos.x,tempoLineUp.recBlockPos.y-(initialBufferSize/8-1)/2);
     
