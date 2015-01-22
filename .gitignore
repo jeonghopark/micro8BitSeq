@@ -1,52 +1,9 @@
-# hidden/temp files
-.DS_Store
-*.swp
-*~.nib
-  
-# Build dir
-build
-bin/*
-!bin/data
-  
-# Xcode project files except for the project file
-*.xcodeproj/
-!*.xcodeproj/project.pbxproj
-*..xcconfig
-*.entitlements
-
-# App
+# osx
 *.app
-
-# addon
-addons/*
-
-# plist
-*.plist
-
-# xcconfig
-*.xcconfig
-
-# openframewokrs files
-*.make
-
-# data files
-*.png
-*.jpg
-*.html
-*.icns
-
-# document files
-!*.md
-test.wav
-recording.wav
-recordingUp.wav
-recordingDown.wav
-bin/data/sounds/recordingUp.wav
-bin/data/sounds/recordingDown.wav
-
-emptyExample.cbp
-emptyExample.depend
-emptyExample.layout
-emptyExample.workspace
-obj/release/src/main.o
-obj/release/src/myApp.o
+*.mode1v3
+*.pbxuser
+.DS_Store
+build/
+xcuserdata/
+DerivedData/
+project.xcworkspace
