@@ -1,9 +1,8 @@
-#include "myApp.h"
+#include "ofApp.h"
 
 
 //--------------------------------------------------------------
-void myApp::setup()
-{
+void ofApp::setup() {
     //ofSetDataPathRoot("../Resources/"); //for Windows comment!
     backgroundColorHue = ofRandom(0,255);
     ofBackground(ofColor::fromHsb(backgroundColorHue, 150, 180));
@@ -93,8 +92,7 @@ void myApp::setup()
     tempoLineUp.delayPos.x = tempoLineUp.length/2 + ofGetWidth()/2 - tempoLineUp.length/(10*2);
 
     nElementLine = 8;
-    for (int i = 0; i<nElementLine; i++)
-    {
+    for (int i = 0; i<nElementLine; i++) {
 		elementLinesDown[i].bSizeOver = false;
         elementLinesDown[i].bOnOffOver = false;
 		elementLinesDown[i].bSizeBeingDragged = false;
@@ -128,12 +126,7 @@ void myApp::setup()
 }
 
 //--------------------------------------------------------------
-void myApp::update()
-{
-    if (!fullscreen)
-    {
-        ofSetWindowShape(1280, 720);
-    }
+void ofApp::update() {
 
 //    tempoLineDown.recBlockPos = ofVec2f(ofGetWidth()*0.05, ofGetHeight()*3/4);
     tempoLineDown.recBlockPos = ofVec2f(tempoLineDown.onOffRectPos.x-30, ofGetHeight()/2+ofGetHeight()*0.1);
@@ -145,7 +138,7 @@ void myApp::update()
 
 
 
-    ofSoundUpdate();
+//    ofSoundUpdate();
 
     //    tempoLineDown.sizeRectPos.x = tempoLineDown.sizeRectPos.x;
     //    tempoLineDown.onOffRectPos.x = ofGetWidth() - tempoLineDown.sizeRectPos.x;
@@ -169,14 +162,7 @@ void myApp::update()
     if (timer>=speed)
     {
         millisDown = ofGetElapsedTimeMillis();
-<<<<<<< HEAD
-        
-=======
 
-//        cout << timer << endl;
-//        cout << speed << endl;
-
->>>>>>> 31c9054c4e61cd9302cdbfaefdd567e854665d48
         triggerCounterDown++;
         int _index = triggerCounterDown%speedFactor;
         for (int i = 0; i<nElementLine; i++)
@@ -238,7 +224,7 @@ void myApp::update()
 
 }
 
-void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos)
+void ofApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos)
 {
     ofPushStyle();
     ofSetRectMode(OF_RECTMODE_CENTER);
@@ -294,13 +280,13 @@ void myApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver,
     ofPopStyle();
 }
 
-//void myApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
+//void ofApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
 //{
 //
 //}
 
 //--------------------------------------------------------------
-void myApp::draw()
+void ofApp::draw()
 {
 
     ofPushMatrix();
@@ -519,12 +505,7 @@ void myApp::draw()
     {
         tempoLineDown.bDownSoundRecordClick = true;
     }
-<<<<<<< HEAD
-    
-=======
 
-
->>>>>>> 31c9054c4e61cd9302cdbfaefdd567e854665d48
     tempoLineDown.bDownSoundRecordPos = ofVec2f(tempoLineDown.recBlockPos.x,tempoLineDown.recBlockPos.y-(initialBufferSize/8-1)/2);
     tempoLineUp.bDownSoundRecordPos = ofVec2f(tempoLineUp.recBlockPos.x,tempoLineUp.recBlockPos.y-(initialBufferSize/8-1)/2);
 
@@ -590,7 +571,7 @@ void myApp::draw()
 }
 
 
-void myApp::infomationWindow()
+void ofApp::infomationWindow()
 {
     ofPushStyle();
     startTime = startTime + 1;
@@ -601,7 +582,7 @@ void myApp::infomationWindow()
 
 }
 
-void myApp::recordingLineDraw(ofVec2f _vP)
+void ofApp::recordingLineDraw(ofVec2f _vP)
 {
 
     ofPushMatrix();
@@ -739,59 +720,46 @@ void myApp::recordingLineDraw(ofVec2f _vP)
 }
 
 //--------------------------------------------------------------
-void myApp::audioIn(float * input, int bufferSize, int nChannels){
-
-	if (initialBufferSize != bufferSize)
-    {
-		ofLog(OF_LOG_ERROR, "your buffer size was set to %i - but the stream needs a buffer size of %i", initialBufferSize, bufferSize);
-		return;
-	}
+void ofApp::audioReceived(float * input, int bufferSize, int nChannels){
 
 	// samples are "interleaved"
-	for (int i = 0; i < bufferSize; i++)
-    {
+	for (int i = 0; i < bufferSize; i++) {
 		buffer[i] = input[i];
 	}
-	bufferCounter++;
 
-    if ((tempoLineDown.recordState==1)&&(soundRecordingDownOn))
-    {
+    bufferCounter++;
+
+    if ((tempoLineDown.recordState==1)&&(soundRecordingDownOn)) {
         tempoLineDown.recordState=3;
         tempoLineDown.myWavWriter.open(ofToDataPath("sounds/recordingDown.wav"), WAVFILE_WRITE);
     }
 
-	if (tempoLineDown.recordState==3)
-    {
+	if (tempoLineDown.recordState==3) {
 		tempoLineDown.myWavWriter.write(input, bufferSize*nChannels);
 	}
 
-    if (tempoLineDown.recordState==2)
-    {
+    
+    if (tempoLineDown.recordState==2) {
         tempoLineDown.myWavWriter.close();
         tempoLineDown.recordState=0;
-        for (int i = 0; i<nElementLine; i++)
-        {
+        for (int i = 0; i<nElementLine; i++) {
             elementLinesDown[i].samplePlay.loadSound("sounds/recordingDown.wav");
         }
     }
 
-    if ((tempoLineUp.recordState==1)&&(soundRecordingDownOn))
-    {
+    if ((tempoLineUp.recordState==1)&&(soundRecordingDownOn)) {
         tempoLineUp.recordState=3;
         tempoLineUp.myWavWriter.open(ofToDataPath("sounds/recordingUp.wav"), WAVFILE_WRITE);
     }
 
-	if (tempoLineUp.recordState==3)
-    {
+	if (tempoLineUp.recordState==3) {
 		tempoLineUp.myWavWriter.write(input, bufferSize*nChannels);
 	}
 
-    if (tempoLineUp.recordState==2)
-    {
+    if (tempoLineUp.recordState==2) {
         tempoLineUp.myWavWriter.close();
         tempoLineUp.recordState=0;
-        for (int i = 0; i<nElementLine; i++)
-        {
+        for (int i = 0; i<nElementLine; i++) {
             elementLinesUp[i].samplePlay.loadSound("sounds/recordingUp.wav");
         }
     }
@@ -800,8 +768,7 @@ void myApp::audioIn(float * input, int bufferSize, int nChannels){
 
 
 //--------------------------------------------------------------
-void myApp::keyPressed(int key)
-{
+void ofApp::keyPressed(int key) {
     //    if (recordState==0)
     //    {
     //        recordState=1;
@@ -809,7 +776,7 @@ void myApp::keyPressed(int key)
 }
 
 //--------------------------------------------------------------
-void myApp::keyReleased(int key)
+void ofApp::keyReleased(int key)
 {
     //    if (recordState==3)
     //    {
@@ -821,7 +788,7 @@ void myApp::keyReleased(int key)
 }
 
 
-bool myApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
+bool ofApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
 {
     float diffx = x - xyN.x;
     float diffy = y - xyN.y;
@@ -836,7 +803,7 @@ bool myApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
     }
 }
 
-bool myApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
+bool ofApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
 {
     float diffx = x - xyN.x;
     float diffy = y - xyN.y;
@@ -854,7 +821,7 @@ bool myApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
 
 
 //--------------------------------------------------------------
-void myApp::mouseMoved(int x, int y)
+void ofApp::mouseMoved(int x, int y)
 {
 
     tempoLineDown.bOnOffOver = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7);
@@ -887,7 +854,7 @@ void myApp::mouseMoved(int x, int y)
 }
 
 //--------------------------------------------------------------
-void myApp::mouseDragged(int x, int y, int button)
+void ofApp::mouseDragged(int x, int y, int button)
 {
     for (int i = 0; i < nElementLine; i++)
     {
@@ -933,7 +900,7 @@ void myApp::mouseDragged(int x, int y, int button)
 
 
 //--------------------------------------------------------------
-void myApp::mousePressed(int x, int y, int button)
+void ofApp::mousePressed(int x, int y, int button)
 {
     tempoLineDown.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7, tempoLineDown.bOnOffBeingClick);
     tempoLineDown.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
@@ -965,7 +932,7 @@ void myApp::mousePressed(int x, int y, int button)
 }
 
 //--------------------------------------------------------------
-void myApp::mouseReleased(int x, int y, int button)
+void ofApp::mouseReleased(int x, int y, int button)
 {
     tempoLineDown.bChangeSampleClick = onOffOut(x, y, tempoLineDown.changeSamplePos, 30, tempoLineDown.bChangeSampleClick);
     tempoLineUp.bChangeSampleClick = onOffOut(x, y, tempoLineUp.changeSamplePos, 30, tempoLineUp.bChangeSampleClick);
@@ -975,17 +942,17 @@ void myApp::mouseReleased(int x, int y, int button)
 }
 
 //--------------------------------------------------------------
-void myApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void myApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void myApp::dragEvent(ofDragInfo dragInfo)
+void ofApp::dragEvent(ofDragInfo dragInfo)
 {
 
 	if( dragInfo.files.size() > 0 )
