@@ -63,7 +63,7 @@ typedef struct
 controlTempoLine;
 
 
-class myApp : public ofBaseApp{
+class ofApp : public ofBaseApp{
 
 public:
     void setup();
@@ -93,7 +93,8 @@ public:
 
     float highVolume;
 
-    void audioIn(float * input, int bufferSize, int nChannels);
+//    void audioIn(float * input, int bufferSize, int nChannels);
+    void audioReceived(float * input, int bufferSize, int nChannels);
 
     int	initialBufferSize;
 	int	sampleRate;
