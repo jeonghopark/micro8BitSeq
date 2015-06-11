@@ -286,8 +286,7 @@ void ofApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver,
 //}
 
 //--------------------------------------------------------------
-void ofApp::draw()
-{
+void ofApp::draw() {
 
     ofPushMatrix();
     ofTranslate(0, ofGetHeight()/2+5);
