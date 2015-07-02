@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-               BuildableName = "micro8BitSeq.app"
-               BlueprintName = "micro8BitSeq"
-               ReferencedContainer = "container:micro8BitSeq.xcodeproj">
+               BuildableName = "Micro8BitSeq.app"
+               BlueprintName = "Micro8BitSeq"
+               ReferencedContainer = "container:Micro8BitSeq.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "micro8BitSeq.app"
-            BlueprintName = "micro8BitSeq"
-            ReferencedContainer = "container:micro8BitSeq.xcodeproj">
+            BuildableName = "Micro8BitSeq.app"
+            BlueprintName = "Micro8BitSeq"
+            ReferencedContainer = "container:Micro8BitSeq.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "micro8BitSeq.app"
-            BlueprintName = "micro8BitSeq"
-            ReferencedContainer = "container:micro8BitSeq.xcodeproj">
+            BuildableName = "Micro8BitSeq.app"
+            BlueprintName = "Micro8BitSeq"
+            ReferencedContainer = "container:Micro8BitSeq.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "micro8BitSeq.app"
-            BlueprintName = "micro8BitSeq"
-            ReferencedContainer = "container:micro8BitSeq.xcodeproj">
+            BuildableName = "Micro8BitSeq.app"
+            BlueprintName = "Micro8BitSeq"
+            ReferencedContainer = "container:Micro8BitSeq.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

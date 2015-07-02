@@ -3,7 +3,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    //ofSetDataPathRoot("../Resources/"); //for Windows comment!
+    
+    ofSetDataPathRoot("../Resources/data/");
+    
     backgroundColorHue = ofRandom(0,255);
     ofBackground(ofColor::fromHsb(backgroundColorHue, 150, 180));
 
@@ -569,7 +571,27 @@ void ofApp::draw() {
 
 }
 
+//--------------------------------------------------------------
+void ofApp::exit(){
+    
 
+    draggedSound.clear();
+    soundsList.clear();
+
+    ofSoundStreamStop();
+    ofSoundStreamClose();
+
+
+
+    
+    
+}
+
+
+
+
+
+//--------------------------------------------------------------
 void ofApp::infomationWindow()
 {
     ofPushStyle();
@@ -581,6 +603,8 @@ void ofApp::infomationWindow()
 
 }
 
+
+//--------------------------------------------------------------
 void ofApp::recordingLineDraw(ofVec2f _vP)
 {
 
