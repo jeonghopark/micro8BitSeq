@@ -574,6 +574,8 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::exit(){
     
+    
+    std::exit(0);
 
     draggedSound.clear();
     soundsList.clear();
