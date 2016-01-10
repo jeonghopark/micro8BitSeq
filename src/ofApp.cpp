@@ -26,12 +26,15 @@ void ofApp::setup() {
 
     dir.listDir("sounds/samples/");
 	dir.sort();
+    
 	if( dir.size() ){
 		soundsList.assign(dir.size(), ofSoundPlayer());
 	}
+    
 	for(int i = 0; i < (int)dir.size(); i++){
-		soundsList[i].loadSound(dir.getPath(i));
+		soundsList[i].load(dir.getPath(i));
 	}
+    
 	currentSound = 0;
 
     fileNameUp = "sounds/samples/tap_02.wav";
@@ -101,7 +104,7 @@ void ofApp::setup() {
 		elementLinesDown[i].bOnOffBeingClick = false;
 		elementLinesDown[i].soundTrigger = true;
         elementLinesDown[i].samplePlay.setMultiPlay(true);
-        elementLinesDown[i].samplePlay.loadSound(fileNameDown);
+        elementLinesDown[i].samplePlay.load(fileNameDown);
         elementLinesDown[i].samplePlay.setVolume(highVolume);
         spacingLineDown = tempoLineDown.length / 10;
         elementLinesDown[i].position = ofVec2f(spacingLineDown + spacingLineDown/2 + spacingLineDown*i, tempoLineDown.onOffRectPos.y);
@@ -116,7 +119,7 @@ void ofApp::setup() {
 		elementLinesUp[i].bOnOffBeingClick = false;
 		elementLinesUp[i].soundTrigger = true;
         elementLinesUp[i].samplePlay.setMultiPlay(true);
-        elementLinesUp[i].samplePlay.loadSound(fileNameUp);
+        elementLinesUp[i].samplePlay.load(fileNameUp);
         elementLinesUp[i].samplePlay.setVolume(highVolume);
         spacingLineUp = tempoLineUp.length / 10;
         elementLinesUp[i].position = ofVec2f(spacingLineUp + spacingLineUp/2 + spacingLineUp*i, tempoLineUp.onOffRectPos.y);
@@ -126,6 +129,9 @@ void ofApp::setup() {
         elementLinesUp[i].triggerColor = 120;
     }
 }
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::update() {
@@ -161,42 +167,32 @@ void ofApp::update() {
     int speedFactor = 32;
     int speedFactor8th = speedFactor/8;
 
-    if (timer>=speed)
-    {
+    if (timer>=speed) {
         millisDown = ofGetElapsedTimeMillis();
 
         triggerCounterDown++;
         int _index = triggerCounterDown%speedFactor;
-        for (int i = 0; i<nElementLine; i++)
-        {
+        for (int i = 0; i<nElementLine; i++){
 
-            if (_index==((i*speedFactor8th)))
-            {
-                if ((elementLinesDown[i].soundTrigger)&&tempoLineDown.bOnOffBeingClick)
-                {
+            if (_index==((i*speedFactor8th))){
+                if ((elementLinesDown[i].soundTrigger)&&tempoLineDown.bOnOffBeingClick){
                     elementLinesDown[i].onOffTrigger = true;
                     elementLinesDown[i].samplePlay.play();
                     elementLinesDown[i].samplePlay.setVolume( ofRandom(0.325,0.95) * tempoLineDown.soundVolume);
                     elementLinesDown[i].samplePlay.setSpeed( ofMap(elementLinesDown[i].sizeRect.y, 0, ofGetHeight()/2, 3.0, 0) * ofRandom(0.75,1.25) );
                 }
-            }
-            else
-            {
+            } else {
                 elementLinesDown[i].onOffTrigger = false;
             }
 
-            if (_index==((i*speedFactor8th)+delayTempoLineUp%8))
-            {
-                if ((elementLinesUp[i].soundTrigger)&&tempoLineUp.bOnOffBeingClick)
-                {
+            if (_index==((i*speedFactor8th)+delayTempoLineUp%8)) {
+                if ((elementLinesUp[i].soundTrigger)&&tempoLineUp.bOnOffBeingClick) {
                     elementLinesUp[i].onOffTrigger = true;
                     elementLinesUp[i].samplePlay.play();
                     elementLinesUp[i].samplePlay.setVolume( ofRandom(0.325,0.95) * tempoLineUp.soundVolume);
                     elementLinesUp[i].samplePlay.setSpeed( ofMap(elementLinesUp[i].sizeRect.y+ofGetHeight()/2, ofGetHeight()/2, 0, 3.0, 0) * ofRandom(0.75,1.25) );
                 }
-            }
-            else
-            {
+            } else {
                 elementLinesUp[i].onOffTrigger = false;
             }
         }
@@ -214,8 +210,7 @@ void ofApp::update() {
 
 
 
-    for (int i = 0; i<nElementLine; i++)
-    {
+    for (int i = 0; i<nElementLine; i++) {
         elementLinesDown[i].position = ofVec2f( tempoLineDown.onOffRectPos.x + spacingLineDown + spacingLineDown/2 + spacingLineDown*i, tempoLineDown.onOffRectPos.y );
         elementLinesDown[i].sizeRect = ofVec2f( elementLinesDown[i].position.x, elementLinesDown[i].sizeRect.y );
         elementLinesDown[i].onOffRect = elementLinesDown[i].sizeRect * ofVec2f(1,0) + ofVec2f(0,5);
@@ -226,66 +221,55 @@ void ofApp::update() {
 
 }
 
-void ofApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos)
-{
+void ofApp::drawingTempoLine(bool _bTOnOff, bool _bTSizeOver, bool _bTOnOffOver, ofVec2f _vTSizePos, ofVec2f _vTOnOffPos) {
     ofPushStyle();
     ofSetRectMode(OF_RECTMODE_CENTER);
     ofSetColor(ofColor::fromHsb(0,0,255,140));
 
-    if (_bTOnOff)
-    {
+    if (_bTOnOff) {
         ofNoFill();
         ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (_bTSizeOver)
-        {
+        if (_bTSizeOver) {
             ofFill();
-        }
-        else
-        {
+        } else {
             ofNoFill();
         }
-    }
-    else
-    {
+    } else {
         ofSetColor(ofColor::fromHsb(0,0,255,40));
-        if (_bTSizeOver)
-        {
+        if (_bTSizeOver) {
             ofFill();
-        }
-        else
-        {
+        } else {
             ofNoFill();
         }
     }
-    ofRect(_vTSizePos, 7, 7);
+    ofDrawRectangle(_vTSizePos, 7, 7);
 
-    if (_bTOnOff)
-    {
+    if (_bTOnOff) {
         ofNoFill();
         ofSetColor(ofColor::fromHsb(0,0,255,140));
-        if (_bTOnOffOver)
-        {
+        if (_bTOnOffOver) {
             ofFill();
-        }
-        else
-        {
+        } else {
             ofNoFill();
         }
-    }
-    else
-    {
+    } else {
         ofFill();
         ofSetColor(ofColor::fromHsb(0,0,255,40));
     }
-    ofRect(_vTOnOffPos, 7, 7);
-    ofLine(_vTOnOffPos+ofVec2f(4,0), _vTSizePos-ofVec2f(4,0));
+    ofDrawRectangle(_vTOnOffPos, 7, 7);
+    ofDrawLine(_vTOnOffPos+ofVec2f(4,0), _vTSizePos-ofVec2f(4,0));
     ofPopStyle();
 }
 
+
+//--------------------------------------------------------------
 //void ofApp::drawingElementLine(bool _bOnOffT, bool _bOnOffBeingClick, bool _bSoundT, bool _bTColor, ofVec2f _vOnOffRect, ofVec2f _vSizeRect)
 //{
 //
 //}
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -299,90 +283,62 @@ void ofApp::draw() {
     ofPushStyle();
     ofSetRectMode(OF_RECTMODE_CENTER);
 
-    for (int i = 0; i<nElementLine; i++)
-    {
+    for (int i = 0; i<nElementLine; i++) {
 
-        if (elementLinesDown[i].onOffTrigger)
-        {
-            if (!elementLinesDown[i].bOnOffBeingClick)
-            {
+        if (elementLinesDown[i].onOffTrigger) {
+            if (!elementLinesDown[i].bOnOffBeingClick) {
                 elementLinesDown[i].triggerColor = 100;
-            }
-            else
-            {
+            } else {
                 elementLinesDown[i].triggerColor = 0;
             }
-        }
-        else
-        {
+        } else {
             elementLinesDown[i].triggerColor = 0;
         }
 
 
-        if (elementLinesDown[i].soundTrigger&&tempoLineDown.bOnOffBeingClick)
-        {
+        if (elementLinesDown[i].soundTrigger&&tempoLineDown.bOnOffBeingClick) {
             ofFill();
             ofSetColor(ofColor::fromHsb(0,0,230+elementLinesDown[i].triggerColor,155+elementLinesDown[i].triggerColor));
-        }
-        else
-        {
+        } else {
             ofNoFill();
             ofSetColor(ofColor::fromHsb(0,0,230+elementLinesDown[i].triggerColor,50+elementLinesDown[i].triggerColor));
         }
-        ofLine(elementLinesDown[i].onOffRect+ofVec2f(0,elementLinesDown[i].width), elementLinesDown[i].sizeRect+ofVec2f(0,-elementLinesDown[i].width));
+        ofDrawLine(elementLinesDown[i].onOffRect+ofVec2f(0,elementLinesDown[i].width), elementLinesDown[i].sizeRect+ofVec2f(0,-elementLinesDown[i].width));
 
-        if (!elementLinesDown[i].bOnOffBeingClick)
-        {
+        if (!elementLinesDown[i].bOnOffBeingClick) {
             ofNoFill();
-            if (elementLinesDown[i].bOnOffOver)
-            {
+            if (elementLinesDown[i].bOnOffOver) {
                 ofFill();
-            }
-            else
-            {
+            } else {
                 ofNoFill();
             }
-        }
-        else
-        {
+        } else {
             ofFill();
-            if (elementLinesDown[i].bOnOffOver)
-            {
+            if (elementLinesDown[i].bOnOffOver) {
                 ofSetColor(ofColor::fromHsb(0,0,255,100));
-            }
-            else
-            {
+            } else {
                 ofSetColor(ofColor::fromHsb(0,0,255,40));
             }
         }
-        ofRect(elementLinesDown[i].onOffRect, 7, 7);
+        ofDrawRectangle(elementLinesDown[i].onOffRect, 7, 7);
 
 
-        if (!elementLinesDown[i].bOnOffBeingClick)
-        {
+        if (!elementLinesDown[i].bOnOffBeingClick) {
             ofNoFill();
-            if (elementLinesDown[i].bSizeOver)
-            {
+            if (elementLinesDown[i].bSizeOver) {
                 ofFill();
-            }
-            else
-            {
+            } else {
                 ofNoFill();
             }
-        }
-        else
-        {
+        } else {
             ofNoFill();
-            if (elementLinesDown[i].bSizeOver)
-            {
+            if (elementLinesDown[i].bSizeOver) {
                 ofSetColor(ofColor::fromHsb(0,0,255,120));
-            }
-            else
-            {
+            } else {
                 ofSetColor(ofColor::fromHsb(0,0,255,40));
             }
         }
-        ofRect(elementLinesDown[i].sizeRect, 7, 7);
+        ofDrawRectangle(elementLinesDown[i].sizeRect, 7, 7);
 
     }
     ofPopStyle();
@@ -398,112 +354,82 @@ void ofApp::draw() {
 
     ofPushStyle();
     ofSetRectMode(OF_RECTMODE_CENTER);
-    for (int i = 0; i<nElementLine; i++)
-    {
+    for (int i = 0; i<nElementLine; i++) {
 
-        if (elementLinesUp[i].onOffTrigger)
-        {
-            if (!elementLinesUp[i].bOnOffBeingClick)
-            {
+        if (elementLinesUp[i].onOffTrigger) {
+            if (!elementLinesUp[i].bOnOffBeingClick) {
                 elementLinesUp[i].triggerColor = 100;
-            }
-            else
-            {
+            } else {
                 elementLinesUp[i].triggerColor = 0;
             }
-        }
-        else
-        {
+        } else {
             elementLinesUp[i].triggerColor = 0;
         }
 
 
-        if (elementLinesUp[i].soundTrigger&&tempoLineUp.bOnOffBeingClick)
-        {
+        if (elementLinesUp[i].soundTrigger&&tempoLineUp.bOnOffBeingClick) {
             ofFill();
             ofSetColor(ofColor::fromHsb(0,0,230+elementLinesUp[i].triggerColor,155+elementLinesUp[i].triggerColor));
-        }
-        else
-        {
+        } else {
             ofNoFill();
             ofSetColor(ofColor::fromHsb(0,0,230+elementLinesUp[i].triggerColor,50+elementLinesUp[i].triggerColor));
         }
-        ofLine(elementLinesUp[i].onOffRect+ofVec2f(0,-elementLinesUp[i].width), elementLinesUp[i].sizeRect+ofVec2f(0,elementLinesUp[i].width));
+        ofDrawLine(elementLinesUp[i].onOffRect+ofVec2f(0,-elementLinesUp[i].width), elementLinesUp[i].sizeRect+ofVec2f(0,elementLinesUp[i].width));
 
-        if (!elementLinesUp[i].bOnOffBeingClick)
-        {
+        if (!elementLinesUp[i].bOnOffBeingClick) {
             ofNoFill();
-            if (elementLinesUp[i].bOnOffOver)
-            {
+            if (elementLinesUp[i].bOnOffOver) {
                 ofFill();
-            }
-            else
-            {
+            } else {
                 ofNoFill();
             }
-        }
-        else
-        {
+        } else {
             ofFill();
-            if (elementLinesUp[i].bOnOffOver)
-            {
+            if (elementLinesUp[i].bOnOffOver) {
                 ofSetColor(ofColor::fromHsb(0,0,255,100));
-            }
-            else
-            {
+            } else {
                 ofSetColor(ofColor::fromHsb(0,0,255,40));
             }
         }
-        ofRect(elementLinesUp[i].onOffRect, 7, 7);
+        ofDrawRectangle(elementLinesUp[i].onOffRect, 7, 7);
 
 
-        if (!elementLinesUp[i].bOnOffBeingClick)
-        {
+        if (!elementLinesUp[i].bOnOffBeingClick) {
             ofNoFill();
-            if (elementLinesUp[i].bSizeOver)
-            {
+            if (elementLinesUp[i].bSizeOver) {
                 ofFill();
-            }
-            else
-            {
+            } else {
                 ofNoFill();
             }
-        }
-        else
-        {
+        } else {
             ofNoFill();
-            if (elementLinesUp[i].bSizeOver)
-            {
+            if (elementLinesUp[i].bSizeOver) {
                 ofSetColor(ofColor::fromHsb(0,0,255,120));
-            }
-            else
-            {
+            } else {
                 ofSetColor(ofColor::fromHsb(0,0,255,40));
             }
         }
-        ofRect(elementLinesUp[i].sizeRect, 7, 7);
+        ofDrawRectangle(elementLinesUp[i].sizeRect, 7, 7);
 
-        //        ofRect(elementLinesUp[i].position, 7, 7);
+        //        ofDrawRectangle(elementLinesUp[i].position, 7, 7);
 
     }
     ofPopStyle();
     ofPopMatrix();
 
-    if (!tempoLineUp.bOnOffBeingClick&&tempoLineDown.bOnOffBeingClick)
-    {
+    if (!tempoLineUp.bOnOffBeingClick&&tempoLineDown.bOnOffBeingClick) {
         recordingLineDraw(tempoLineDown.recBlockPos);
     }
-    if (!tempoLineDown.bOnOffBeingClick&&tempoLineUp.bOnOffBeingClick)
-    {
+    
+    if (!tempoLineDown.bOnOffBeingClick&&tempoLineUp.bOnOffBeingClick) {
         recordingLineDraw(tempoLineUp.recBlockPos);
     }
 
-    if ((!tempoLineUp.bOnOffBeingClick&&!tempoLineUp.bDownSoundRecordClick)||tempoLineDown.bOnOffBeingClick)
-    {
+    if ((!tempoLineUp.bOnOffBeingClick&&!tempoLineUp.bDownSoundRecordClick)||tempoLineDown.bOnOffBeingClick) {
         tempoLineUp.bDownSoundRecordClick = true;
     }
-    if ((!tempoLineDown.bOnOffBeingClick&&!tempoLineDown.bDownSoundRecordClick)||tempoLineUp.bOnOffBeingClick)
-    {
+    
+    if ((!tempoLineDown.bOnOffBeingClick&&!tempoLineDown.bDownSoundRecordClick)||tempoLineUp.bOnOffBeingClick) {
         tempoLineDown.bDownSoundRecordClick = true;
     }
 
@@ -512,64 +438,66 @@ void ofApp::draw() {
 
     ofPushStyle();
     ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 100) );
-    if (tempoLineUp.bChangeSampleOver)
-    {
+
+    if (tempoLineUp.bChangeSampleOver) {
         ofPushStyle();
-        if (tempoLineUp.bChangeSampleClick)
-        {
+    
+        if (tempoLineUp.bChangeSampleClick) {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 160) );
             tempoLineUp.changeSampleIndex++;
             tempoLineUp.changeSampleIndex = tempoLineUp.changeSampleIndex%dir.size();
-            for (int i = 0; i<nElementLine; i++)
-            {
+            for (int i = 0; i<nElementLine; i++) {
                 string fileNameUp = "sounds/samples/" + dir.getName(tempoLineUp.changeSampleIndex);
-                elementLinesUp[i].samplePlay.loadSound(fileNameUp);
+                elementLinesUp[i].samplePlay.load(fileNameUp);
             }
             tempoLineUp.bChangeSampleClick = !tempoLineUp.bChangeSampleClick;
-        }
-        else
-        {
+        } else {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 50) );
         }
-        ofRect(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
+        
+        ofDrawRectangle(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
         ofNoFill();
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 80) );
-//        ofRect(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
-        ofLine(tempoLineUp.changeSamplePos.x+tempoLineUp.changeSampleSize/2,tempoLineUp.changeSamplePos.y+tempoLineUp.changeSampleSize/2,tempoLineUp.sizeRectPos.x+3,tempoLineUp.sizeRectPos.y+ofGetHeight()/2-7);
+
+        //        ofDrawRectangle(tempoLineUp.changeSamplePos.x-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSamplePos.y-tempoLineUp.changeSampleSize/2, tempoLineUp.changeSampleSize, tempoLineUp.changeSampleSize);
+        ofDrawLine(tempoLineUp.changeSamplePos.x+tempoLineUp.changeSampleSize/2,tempoLineUp.changeSamplePos.y+tempoLineUp.changeSampleSize/2,tempoLineUp.sizeRectPos.x+3,tempoLineUp.sizeRectPos.y+ofGetHeight()/2-7);
         ofPopStyle();
 
     }
-    if (tempoLineDown.bChangeSampleOver)
-    {
+    
+    
+    if (tempoLineDown.bChangeSampleOver) {
         ofPushStyle();
-        if (tempoLineDown.bChangeSampleClick)
-        {
+    
+        if (tempoLineDown.bChangeSampleClick) {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 160) );
             tempoLineDown.changeSampleIndex++;
             tempoLineDown.changeSampleIndex = tempoLineDown.changeSampleIndex%dir.size();
-            for (int i = 0; i<nElementLine; i++)
-            {
+            for (int i = 0; i<nElementLine; i++) {
                 string fileNameDown = "sounds/samples/" + dir.getName(tempoLineDown.changeSampleIndex);
-                elementLinesDown[i].samplePlay.loadSound(fileNameDown);
+                elementLinesDown[i].samplePlay.load(fileNameDown);
             }
-            tempoLineDown.bChangeSampleClick = !tempoLineDown.bChangeSampleClick;        }
-        else
-        {
+            tempoLineDown.bChangeSampleClick = !tempoLineDown.bChangeSampleClick;        } else {
             ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, 220, 50) );
         }
-        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
+        ofDrawRectangle(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
         ofNoFill();
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, 80) );
-//        ofRect(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
-        ofLine(tempoLineDown.changeSamplePos.x+30,tempoLineDown.changeSamplePos.y-30,tempoLineDown.sizeRectPos.x+3,tempoLineDown.sizeRectPos.y+ofGetHeight()/2+7);
+//        ofDrawRectangle(tempoLineDown.changeSamplePos.x-30, tempoLineDown.changeSamplePos.y-30, 60, 60);
+        ofDrawLine(tempoLineDown.changeSamplePos.x+30,tempoLineDown.changeSamplePos.y-30,tempoLineDown.sizeRectPos.x+3,tempoLineDown.sizeRectPos.y+ofGetHeight()/2+7);
         ofPopStyle();
     }
+    
     ofPopStyle();
 
     infomationWindow();
     ofSetFullscreen(fullscreen);
 
 }
+
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -582,10 +510,6 @@ void ofApp::exit(){
 
     ofSoundStreamStop();
     ofSoundStreamClose();
-
-
-
-    
     
 }
 
@@ -594,21 +518,19 @@ void ofApp::exit(){
 
 
 //--------------------------------------------------------------
-void ofApp::infomationWindow()
-{
+void ofApp::infomationWindow() {
     ofPushStyle();
     startTime = startTime + 1;
     if (startTime>300) startTime = 301;
     ofSetColor( ofColor::fromHsb(backgroundColorHue, 0, ofMap(startTime,0,300,0,230), ofMap(startTime,0,300,255,0) ) );
-    ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     ofPopStyle();
 
 }
 
 
 //--------------------------------------------------------------
-void ofApp::recordingLineDraw(ofVec2f _vP)
-{
+void ofApp::recordingLineDraw(ofVec2f _vP) {
 
     ofPushMatrix();
     ofTranslate(_vP);
@@ -616,28 +538,24 @@ void ofApp::recordingLineDraw(ofVec2f _vP)
 
     float colorAlpha = 120;
 
-    if (_vP.y == tempoLineDown.recBlockPos.y)
-    {
+    if (_vP.y == tempoLineDown.recBlockPos.y) {
         ofPushStyle();
-        if (tempoLineDown.bDownSoundRecordClick)
-        {
+        if (tempoLineDown.bDownSoundRecordClick) {
             tempoLineDown.rectBlockAlphaFactor = tempoLineDown.rectBlockAlphaFactor + 2.5;
             tempoLineDown.soundVolume = 1;
             ofFill();
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.5) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
+            ofDrawRectangle(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
             ofNoFill();
-        }
-        else
-        {
+        } else {
             tempoLineDown.rectBlockAlphaFactor = colorAlpha;
             tempoLineDown.soundVolume = 0;
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.2) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
+            ofDrawRectangle(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
         ofPushStyle();
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineDown.rectBlockAlphaFactor))*colorAlpha*0.3) ));
-        ofLine( 0,-(initialBufferSize/8-1)/2,tempoLineDown.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y+5+3 );
+        ofDrawLine( 0,-(initialBufferSize/8-1)/2,tempoLineDown.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y+5+3 );
         ofPopStyle();
 
         ofPopStyle();
@@ -645,25 +563,22 @@ void ofApp::recordingLineDraw(ofVec2f _vP)
     else
     {
         ofPushStyle();
-        if (tempoLineUp.bDownSoundRecordClick)
-        {
+        if (tempoLineUp.bDownSoundRecordClick) {
             tempoLineUp.rectBlockAlphaFactor = tempoLineUp.rectBlockAlphaFactor + 2.5;
             tempoLineUp.soundVolume = 1;
             ofFill();
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.5) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
+            ofDrawRectangle(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
             ofNoFill();
-        }
-        else
-        {
+        } else {
             tempoLineUp.rectBlockAlphaFactor = colorAlpha;
             tempoLineUp.soundVolume = 0;
             ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.2) ));
-            ofRect(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
+            ofDrawRectangle(0,-(initialBufferSize/8-1)/2,initialBufferSize/8-1,initialBufferSize/8-1);
         }
         ofPushStyle();
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 230, abs(sin(ofDegToRad(tempoLineUp.rectBlockAlphaFactor))*colorAlpha*0.3) ));
-        ofLine( 0,(initialBufferSize/8-1)/2,tempoLineUp.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y-5-3 );
+        ofDrawLine( 0,(initialBufferSize/8-1)/2,tempoLineUp.onOffRectPos.x-_vP.x-5,ofGetHeight()/2-_vP.y-5-3 );
         ofPopStyle();
         ofPopStyle();
     }
@@ -671,46 +586,38 @@ void ofApp::recordingLineDraw(ofVec2f _vP)
 
     float oldValue;
 
-    for(int i = 0; i < initialBufferSize/8-1; i++)
-    {
+    for(int i = 0; i < initialBufferSize/8-1; i++) {
         ofPushStyle();
         ofSetColor(ofColor::fromHsb(backgroundColorHue, 0, 220, 150));
 
-        ofLine(i, buffer[i] * (initialBufferSize/8-1)/3, i+1, buffer[i+1] * -(initialBufferSize/8-1)/3);
+        ofDrawLine(i, buffer[i] * (initialBufferSize/8-1)/3, i+1, buffer[i+1] * -(initialBufferSize/8-1)/3);
         //        ofEllipse(i, 0, buffer[i] * (initialBufferSize/8-1)/3, buffer[i] * (initialBufferSize/8-1)/2);
 
         ofPopStyle();
 
-        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineDown.bDownSoundRecordClick)
-        {
+        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineDown.bDownSoundRecordClick) {
             tempoLineDown.startTime = ofGetElapsedTimeMillis();
         }
-        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineUp.bDownSoundRecordClick)
-        {
+        if ((abs(buffer[i+1]*50.0f)>5)&&!tempoLineUp.bDownSoundRecordClick) {
             tempoLineUp.startTime = ofGetElapsedTimeMillis();
         }
     }
 
     ofPopMatrix();
 
-    if (_vP.y == tempoLineDown.recBlockPos.y)
-    {
+    if (_vP.y == tempoLineDown.recBlockPos.y) {
         tempoLineDown.recordingTime = 1000;
         tempoLineDown.timeStamp = ofGetElapsedTimeMillis() - tempoLineDown.startTime;
 
-        if ((tempoLineDown.timeStamp<tempoLineDown.recordingTime))
-        {
-            if (tempoLineDown.recordState==0)
-            {
+        if ((tempoLineDown.timeStamp<tempoLineDown.recordingTime)) {
+            if (tempoLineDown.recordState==0) {
                 tempoLineDown.recordState=1;
             }
             tempoLineDown.bTimerReached = false;
         }
 
-        if ((tempoLineDown.timeStamp>=tempoLineDown.recordingTime)&&!tempoLineDown.bTimerReached)
-        {
-            if (tempoLineDown.recordState==3)
-            {
+        if ((tempoLineDown.timeStamp>=tempoLineDown.recordingTime)&&!tempoLineDown.bTimerReached) {
+            if (tempoLineDown.recordState==3) {
                 tempoLineDown.recordState=2;
             }
             tempoLineDown.bTimerReached = true;
@@ -722,19 +629,15 @@ void ofApp::recordingLineDraw(ofVec2f _vP)
         tempoLineUp.recordingTime = 1000;
         tempoLineUp.timeStamp = ofGetElapsedTimeMillis() - tempoLineUp.startTime;
 
-        if ((tempoLineUp.timeStamp<tempoLineUp.recordingTime))
-        {
-            if (tempoLineUp.recordState==0)
-            {
+        if ((tempoLineUp.timeStamp<tempoLineUp.recordingTime)) {
+            if (tempoLineUp.recordState==0) {
                 tempoLineUp.recordState=1;
             }
             tempoLineUp.bTimerReached = false;
         }
 
-        if ((tempoLineUp.timeStamp>=tempoLineUp.recordingTime)&&!tempoLineUp.bTimerReached)
-        {
-            if (tempoLineUp.recordState==3)
-            {
+        if ((tempoLineUp.timeStamp>=tempoLineUp.recordingTime)&&!tempoLineUp.bTimerReached) {
+            if (tempoLineUp.recordState==3) {
                 tempoLineUp.recordState=2;
             }
             tempoLineUp.bTimerReached = true;
@@ -768,7 +671,7 @@ void ofApp::audioReceived(float * input, int bufferSize, int nChannels){
         tempoLineDown.myWavWriter.close();
         tempoLineDown.recordState=0;
         for (int i = 0; i<nElementLine; i++) {
-            elementLinesDown[i].samplePlay.loadSound("sounds/recordingDown.wav");
+            elementLinesDown[i].samplePlay.load("sounds/recordingDown.wav");
         }
     }
 
@@ -785,7 +688,7 @@ void ofApp::audioReceived(float * input, int bufferSize, int nChannels){
         tempoLineUp.myWavWriter.close();
         tempoLineUp.recordState=0;
         for (int i = 0; i<nElementLine; i++) {
-            elementLinesUp[i].samplePlay.loadSound("sounds/recordingUp.wav");
+            elementLinesUp[i].samplePlay.load("sounds/recordingUp.wav");
         }
     }
 
@@ -800,9 +703,11 @@ void ofApp::keyPressed(int key) {
     //    }
 }
 
+
+
+
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key)
-{
+void ofApp::keyReleased(int key) {
     //    if (recordState==3)
     //    {
     //        recordState=2;
@@ -813,13 +718,13 @@ void ofApp::keyReleased(int key)
 }
 
 
-bool ofApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
-{
+
+//--------------------------------------------------------------
+bool ofApp::inOutCal(float x, float y, ofVec2f xyN, int distSize) {
     float diffx = x - xyN.x;
     float diffy = y - xyN.y;
     float diff = sqrt(diffx*diffx + diffy*diffy);
-    if (diff < distSize)
-    {
+    if (diff < distSize) {
         return true;
     }
     else
@@ -828,13 +733,13 @@ bool ofApp::inOutCal(float x, float y, ofVec2f xyN, int distSize)
     }
 }
 
-bool ofApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
-{
+
+//--------------------------------------------------------------
+bool ofApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b) {
     float diffx = x - xyN.x;
     float diffy = y - xyN.y;
     float diff = sqrt(diffx*diffx + diffy*diffy);
-    if (diff < distSize)
-    {
+    if (diff < distSize) {
         return _b = !_b;
     }
     else
@@ -846,8 +751,7 @@ bool ofApp::onOffOut(float x, float y, ofVec2f xyN, int distSize, bool _b)
 
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y)
-{
+void ofApp::mouseMoved(int x, int y) {
 
     tempoLineDown.bOnOffOver = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7);
     tempoLineDown.bSizeOver = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
@@ -868,8 +772,7 @@ void ofApp::mouseMoved(int x, int y)
 
 
 
-    for (int i = 0; i < nElementLine; i++)
-    {
+    for (int i = 0; i < nElementLine; i++) {
         elementLinesDown[i].bSizeOver = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].sizeRect, elementLinesDown[i].width);
         elementLinesDown[i].bOnOffOver = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, elementLinesDown[i].width);
         elementLinesUp[i].bSizeOver = inOutCal(x, y - ofGetHeight()/2+5, elementLinesUp[i].sizeRect, elementLinesUp[i].width);
@@ -879,12 +782,10 @@ void ofApp::mouseMoved(int x, int y)
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button)
-{
-    for (int i = 0; i < nElementLine; i++)
-    {
-		if (elementLinesDown[i].bSizeBeingDragged == true)
-        {
+void ofApp::mouseDragged(int x, int y, int button) {
+    
+    for (int i = 0; i < nElementLine; i++) {
+		if (elementLinesDown[i].bSizeBeingDragged == true) {
             if (y<ofGetHeight()/2+20)
                 y = ofGetHeight()/2+20;
             if (y>ofGetHeight()-10)
@@ -893,10 +794,8 @@ void ofApp::mouseDragged(int x, int y, int button)
 		}
 	}
 
-    for (int i = 0; i < nElementLine; i++)
-    {
-		if (elementLinesUp[i].bSizeBeingDragged == true)
-        {
+    for (int i = 0; i < nElementLine; i++) {
+		if (elementLinesUp[i].bSizeBeingDragged == true) {
             if (y>ofGetHeight()/2-20)
                 y = ofGetHeight()/2-20;
             if (y<10)
@@ -905,8 +804,7 @@ void ofApp::mouseDragged(int x, int y, int button)
 		}
 	}
 
-    if (tempoLineDown.bSizeBeingDragged == true)
-    {
+    if (tempoLineDown.bSizeBeingDragged == true) {
         if (x<ofGetWidth()/2+ofGetWidth()*0.07)
             x = ofGetWidth()/2+ofGetWidth()*0.07;
         if (x>ofGetWidth()-ofGetWidth()*0.11)
@@ -914,8 +812,7 @@ void ofApp::mouseDragged(int x, int y, int button)
         tempoLineDown.sizeRectPos.x = x;
     }
 
-    if (tempoLineUp.bSizeBeingDragged == true)
-    {
+    if (tempoLineUp.bSizeBeingDragged == true) {
         tempoLineUp.position.x = x - (tempoLineUp.length/2+ofGetWidth()/2);
         if (tempoLineUp.position.x>49) tempoLineUp.position.x = 49;
         if (tempoLineUp.position.x<-49) tempoLineUp.position.x = -49;
@@ -925,8 +822,7 @@ void ofApp::mouseDragged(int x, int y, int button)
 
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button)
-{
+void ofApp::mousePressed(int x, int y, int button) {
     tempoLineDown.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2-5, tempoLineDown.onOffRectPos, 7, tempoLineDown.bOnOffBeingClick);
     tempoLineDown.bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, tempoLineDown.sizeRectPos, 7);
     tempoLineUp.bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2+5, tempoLineUp.onOffRectPos, 7, tempoLineUp.bOnOffBeingClick);
@@ -937,18 +833,15 @@ void ofApp::mousePressed(int x, int y, int button)
 
 
 
-    for (int i = 0; i < nElementLine; i++)
-    {
+    for (int i = 0; i < nElementLine; i++) {
         elementLinesDown[i].bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2-5, elementLinesDown[i].sizeRect, elementLinesDown[i].width);
         elementLinesUp[i].bSizeBeingDragged = inOutCal(x, y - ofGetHeight()/2+5, elementLinesUp[i].sizeRect, elementLinesUp[i].width);
 
-        if (tempoLineDown.bOnOffBeingClick)
-        {
+        if (tempoLineDown.bOnOffBeingClick) {
             elementLinesDown[i].bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, 7, elementLinesDown[i].bOnOffBeingClick);
             elementLinesDown[i].soundTrigger = onOffOut(x, y - ofGetHeight()/2-5, elementLinesDown[i].onOffRect, 7, elementLinesDown[i].soundTrigger);
         }
-        if (tempoLineUp.bOnOffBeingClick)
-        {
+        if (tempoLineUp.bOnOffBeingClick) {
             elementLinesUp[i].bOnOffBeingClick = onOffOut(x, y - ofGetHeight()/2+5, elementLinesUp[i].onOffRect, 7, elementLinesUp[i].bOnOffBeingClick);
             elementLinesUp[i].soundTrigger = onOffOut(x, y - ofGetHeight()/2+5, elementLinesUp[i].onOffRect, 7, elementLinesUp[i].soundTrigger);
         }
@@ -956,9 +849,9 @@ void ofApp::mousePressed(int x, int y, int button)
 
 }
 
+
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button)
-{
+void ofApp::mouseReleased(int x, int y, int button) {
     tempoLineDown.bChangeSampleClick = onOffOut(x, y, tempoLineDown.changeSamplePos, 30, tempoLineDown.bChangeSampleClick);
     tempoLineUp.bChangeSampleClick = onOffOut(x, y, tempoLineUp.changeSamplePos, 30, tempoLineUp.bChangeSampleClick);
     //    if(inOutCal(x, y, tempoLineDown.changeSamplePos, 30)) tempoLineDown.bChangeSampleClick = false;
@@ -966,44 +859,46 @@ void ofApp::mouseReleased(int x, int y, int button)
 
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo)
-{
 
-	if( dragInfo.files.size() > 0 )
-    {
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo) {
+
+	if( dragInfo.files.size() > 0 ) {
         dragPt = dragInfo.position;
 
 		draggedSound.assign( dragInfo.files.size(), ofSoundPlayer() );
 
-        for(int k = 0; k < dragInfo.files.size(); k++)
-        {
-            if (dragPt.y>ofGetHeight()/2)
-            {
-                draggedSound[k].loadSound(dragInfo.files[k]);
+        for(int k = 0; k < dragInfo.files.size(); k++) {
+            if (dragPt.y>ofGetHeight()/2) {
+                draggedSound[k].load(dragInfo.files[k]);
                 for (int i = 0; i<nElementLine; i++)
                 {
-                    elementLinesDown[i].samplePlay.loadSound(dragInfo.files[k]);
+                    elementLinesDown[i].samplePlay.load(dragInfo.files[k]);
                 }
             }
-            if (dragPt.y<ofGetHeight()/2)
-            {
-                draggedSound[k].loadSound(dragInfo.files[k]);
+            if (dragPt.y<ofGetHeight()/2) {
+                draggedSound[k].load(dragInfo.files[k]);
                 for (int i = 0; i<nElementLine; i++)
                 {
-                    elementLinesUp[i].samplePlay.loadSound(dragInfo.files[k]);
+                    elementLinesUp[i].samplePlay.load(dragInfo.files[k]);
                 }
             }
 		}
     }
+    
 }
